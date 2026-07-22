@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: shopkeep
+shopkeep:
+  discord:
+    token: ${DISCORD_TOKEN}
