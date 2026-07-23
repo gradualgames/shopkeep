@@ -1,6 +1,20 @@
 spring:
   application:
     name: shopkeep
+
+  datasource:
+    url: jdbc:sqlite:./data/shopkeep.db
+    driver-class-name: org.sqlite.JDBC
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
 shopkeep:
   discord:
     token: ${DISCORD_TOKEN}
