@@ -3,6 +3,7 @@ package com.gradualgames.shopkeep.config;
 import com.gradualgames.shopkeep.listener.ShopkeepListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +14,20 @@ public class ShopkeepConfig {
     @Value("${shopkeep.discord.token}")
     private String token;
 
+    @Value("${shopkeep.discord.server_id}")
+    private String serverId;
+
     @Bean
     public JDA jda(ShopkeepListener shopkeepListener) throws InterruptedException {
         JDA jda = JDABuilder.createDefault(token)
                 .addEventListeners(shopkeepListener)
                 .build();
         jda.awaitReady();
+        Guild guild = jda.getGuildById(serverId);
+        if (guild != null) {
+            guild.upsertCommand("hello", "Tell Shopkeep to say hello.")
+                    .queue();
+        }
         return jda;
     }
 

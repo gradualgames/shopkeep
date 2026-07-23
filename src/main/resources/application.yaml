@@ -4,3 +4,4 @@ spring:
 shopkeep:
   discord:
     token: ${DISCORD_TOKEN}
+    server_id: ${SERVER_ID}
