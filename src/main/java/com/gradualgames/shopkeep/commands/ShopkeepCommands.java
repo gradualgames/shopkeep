@@ -1,21 +1,65 @@
-package com.gradualgames.shopkeep.listener;
+package com.gradualgames.shopkeep.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gradualgames.shopkeep.Shopkeep;
 import com.gradualgames.shopkeep.character.BFCharacter;
 import com.gradualgames.shopkeep.character.BFCharacterStore;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 import java.io.IOException;
 
-public class ShopkeepListener extends ListenerAdapter {
+public class ShopkeepCommands extends ListenerAdapter {
 
     private BFCharacterStore bfCharacterStore;
 
-    public ShopkeepListener() throws IOException {
+    public ShopkeepCommands() throws IOException {
         bfCharacterStore = new BFCharacterStore();
+    }
+
+    public void registerCommands(Guild guild) {
+        guild.upsertCommand("hello", "Tell Shopkeep to say hello.")
+            .queue();
+        guild.upsertCommand(
+            Commands.slash("character", "Character commands")
+                .addSubcommands(
+                    new SubcommandData("create", "Create a character")
+                        .addOption(
+                            OptionType.STRING,
+                            "name",
+                            "name",
+                            true
+                        )
+                        .addOption(
+                            OptionType.STRING,
+                            "race",
+                            "race",
+                            true
+                        )
+                        .addOption(
+                            OptionType.STRING,
+                            "class",
+                            "class",
+                            true
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "level",
+                            "level",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "xp",
+                            "experience",
+                            false
+                        ),
+                    new SubcommandData("list", "List characters")
+                )
+        ).queue();
     }
 
     @Override
