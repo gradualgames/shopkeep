@@ -56,6 +56,18 @@ public class ShopkeepCommands extends ListenerAdapter {
                             "xp",
                             "experience",
                             false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "hp",
+                            "hit points",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "maxhp",
+                            "max hit points",
+                            false
                         ),
                     new SubcommandData("list", "List characters")
                 )
@@ -82,6 +94,8 @@ public class ShopkeepCommands extends ListenerAdapter {
                     String bfClass = event.getOption("class").getAsString();
                     Integer level = event.getOption("level").getAsInt();
                     Integer xp = event.getOption("xp").getAsInt();
+                    Integer hp = event.getOption("hp").getAsInt();
+                    Integer maxHp = event.getOption("maxhp").getAsInt();
 
                     BFCharacter.Builder builder = new BFCharacter.Builder();
                     BFCharacter bfCharacter =
@@ -90,6 +104,8 @@ public class ShopkeepCommands extends ListenerAdapter {
                             .bfClass(bfClass)
                             .level(level)
                             .xp(xp)
+                            .hp(hp)
+                            .maxHp(maxHp)
                             .build();
 
                     try {

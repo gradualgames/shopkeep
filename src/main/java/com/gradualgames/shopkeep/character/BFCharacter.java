@@ -197,8 +197,8 @@ public class BFCharacter {
             return this;
         }
 
-        public Builder maxhp(Integer maxhp) {
-            bfCharacter.setMaxHp(maxhp);
+        public Builder maxHp(Integer maxHp) {
+            bfCharacter.setMaxHp(maxHp);
             return this;
         }
 
