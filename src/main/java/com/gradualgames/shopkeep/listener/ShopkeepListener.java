@@ -36,12 +36,16 @@ public class ShopkeepListener extends ListenerAdapter {
                     String name = event.getOption("name").getAsString();
                     String race = event.getOption("race").getAsString();
                     String bfClass = event.getOption("class").getAsString();
+                    Integer level = event.getOption("level").getAsInt();
+                    Integer xp = event.getOption("xp").getAsInt();
 
                     BFCharacter.Builder builder = new BFCharacter.Builder();
                     BFCharacter bfCharacter =
                         builder.name(name)
                             .bfRace(race)
                             .bfClass(bfClass)
+                            .level(level)
+                            .xp(xp)
                             .build();
 
                     try {

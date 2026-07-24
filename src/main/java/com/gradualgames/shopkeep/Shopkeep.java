@@ -31,20 +31,32 @@ public class Shopkeep {
                             .addOption(
                                 OptionType.STRING,
                                 "name",
-                                "The character's name",
+                                "name",
                                 true
                             )
                             .addOption(
                                 OptionType.STRING,
                                 "race",
-                                "The character's race",
+                                "race",
                                 true
                             )
                             .addOption(
                                 OptionType.STRING,
                                 "class",
-                                "The character's class",
+                                "class",
                                 true
+                            )
+                            .addOption(
+                                OptionType.INTEGER,
+                                "level",
+                                "level",
+                                false
+                            )
+                            .addOption(
+                                OptionType.INTEGER,
+                                "xp",
+                                "experience",
+                                false
                             ),
                         new SubcommandData("list", "List characters")
                     )
