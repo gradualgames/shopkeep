@@ -1,32 +1,30 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '4.1.0'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'application'
 }
 
 group = 'com.gradualgames'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-    implementation('net.dv8tion:JDA:6.5.0')
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.xerial:sqlite-jdbc:3.53.1.0'
-    implementation 'org.hibernate.orm:hibernate-community-dialects'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'net.dv8tion:JDA:6.5.0'
+
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.19.2')
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    // JDA uses SLF4J. This gives you actual console logging.
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+application {
+    mainClass = 'com.gradualgames.shopkeep.Shopkeep'
 }
