@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -92,10 +93,10 @@ public class ShopkeepCommands extends ListenerAdapter {
                     String name = event.getOption("name").getAsString();
                     String race = event.getOption("race").getAsString();
                     String bfClass = event.getOption("class").getAsString();
-                    Integer level = event.getOption("level").getAsInt();
-                    Integer xp = event.getOption("xp").getAsInt();
-                    Integer hp = event.getOption("hp").getAsInt();
-                    Integer maxHp = event.getOption("maxhp").getAsInt();
+                    Integer level = event.getOption("level", null, OptionMapping::getAsInt);
+                    Integer xp = event.getOption("xp", null, OptionMapping::getAsInt);
+                    Integer hp = event.getOption("hp", null, OptionMapping::getAsInt);
+                    Integer maxHp = event.getOption("maxhp", null, OptionMapping::getAsInt);
 
                     BFCharacter.Builder builder = new BFCharacter.Builder();
                     BFCharacter bfCharacter =
