@@ -54,6 +54,12 @@ public class ShopkeepCommands extends ListenerAdapter {
                         )
                         .addOption(
                             OptionType.INTEGER,
+                            "gp",
+                            "gold",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
                             "xp",
                             "experience",
                             false
@@ -124,7 +130,26 @@ public class ShopkeepCommands extends ListenerAdapter {
                             "charisma",
                             false
                         ),
-                    new SubcommandData("list", "List characters")
+                    new SubcommandData("list", "List characters"),
+                    new SubcommandData("add-ability", "Add special ability to character")
+                        .addOption(
+                            OptionType.STRING,
+                            "name",
+                            "Name of character to add ability to",
+                            true
+                        )
+                        .addOption(
+                            OptionType.STRING,
+                            "type",
+                            "Ability type",
+                            true
+                        )
+                        .addOption(
+                            OptionType.STRING,
+                            "description",
+                            "Ability description",
+                            true
+                        )
                 )
         ).queue();
     }
@@ -154,6 +179,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                     Integer maxHp = event.getOption("maxhp", null, OptionMapping::getAsInt);
                     Integer ac = event.getOption("ac", null, OptionMapping::getAsInt);
                     Integer atk = event.getOption("atk", null, OptionMapping::getAsInt);
+                    Integer mvt = event.getOption("mvt", null, OptionMapping::getAsInt);
                     Integer strength = event.getOption("strength", null, OptionMapping::getAsInt);
                     Integer intelligence = event.getOption("intelligence", null, OptionMapping::getAsInt);
                     Integer wisdom = event.getOption("wisdom", null, OptionMapping::getAsInt);
@@ -173,6 +199,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                             .maxHp(maxHp)
                             .ac(ac)
                             .atk(atk)
+                            .mvt(mvt)
                             .strength(strength)
                             .intelligence(intelligence)
                             .wisdom(wisdom)
@@ -189,6 +216,18 @@ public class ShopkeepCommands extends ListenerAdapter {
                     }
 
                     System.out.println("character create command received.");
+                }
+                case "add-ability" -> {
+                    String name = event.getOption("name").getAsString();
+                    String type = event.getOption("type").getAsString();
+                    String description = event.getOption("description").getAsString();
+                    try {
+                        Character character = characterStore.load(name);
+                        character.getSpecialAbilities().putIfAbsent(type, description);
+                        characterStore.save(character);
+                    } catch (IOException e) {
+                        System.out.println("Failed to load character: " + name);
+                    }
                 }
                 case "list" -> {
                     System.out.println("character list command received.");

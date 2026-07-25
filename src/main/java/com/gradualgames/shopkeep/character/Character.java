@@ -1,6 +1,8 @@
 package com.gradualgames.shopkeep.character;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Character {
 
@@ -38,9 +40,10 @@ public class Character {
 
     private Integer charisma;
 
-    private List<SpecialAbility> specialAbilities;
+    private Map<String, String> specialAbilities;
 
     public Character() {
+        specialAbilities = new HashMap<>();
     }
 
     public String getName() {
@@ -179,11 +182,11 @@ public class Character {
         this.charisma = charisma;
     }
 
-    public List<SpecialAbility> getSpecialAbilities() {
+    public Map<String, String> getSpecialAbilities() {
         return specialAbilities;
     }
 
-    public void setSpecialAbilities(List<SpecialAbility> specialAbilities) {
+    public void setSpecialAbilities(Map<String, String> specialAbilities) {
         this.specialAbilities = specialAbilities;
     }
 
