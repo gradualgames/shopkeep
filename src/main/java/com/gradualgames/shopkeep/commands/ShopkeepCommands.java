@@ -149,6 +149,25 @@ public class ShopkeepCommands extends ListenerAdapter {
                             "description",
                             "Ability description",
                             true
+                        ),
+                    new SubcommandData("update", "Updates a character stat.")
+                        .addOption(
+                            OptionType.STRING,
+                            "name",
+                            "Character name",
+                            true
+                        )
+                        .addOption(
+                            OptionType.STRING,
+                            "stat",
+                            "Stat name",
+                            true
+                        )
+                        .addOption(
+                            OptionType.STRING,
+                            "value",
+                            "Stat value",
+                            true
                         )
                 )
         ).queue();
@@ -227,6 +246,52 @@ public class ShopkeepCommands extends ListenerAdapter {
                         characterStore.save(character);
                     } catch (IOException e) {
                         System.out.println("Failed to load character: " + name);
+                    }
+                }
+                case "update" -> {
+                    String name = event.getOption("name").getAsString();
+                    String stat = event.getOption("stat").getAsString();
+                    String value = event.getOption("value").getAsString();
+                    Character character = null;
+                    try {
+                        character = characterStore.load(name);
+                        switch(stat) {
+                            case "race" ->
+                                character.setRace(value);
+                            case "class" ->
+                                character.setCharClass(value);
+                            case "level" ->
+                                character.setLevel(Integer.parseInt(value));
+                            case "gp" ->
+                                character.setGp(Integer.parseInt(value));
+                            case "xp" ->
+                                character.setXp(Integer.parseInt(value));
+                            case "hp" ->
+                                character.setHp(Integer.parseInt(value));
+                            case "maxhp" ->
+                                character.setMaxHp(Integer.parseInt(value));
+                            case "ac" ->
+                                character.setAc(Integer.parseInt(value));
+                            case "atk" ->
+                                character.setAtk(Integer.parseInt(value));
+                            case "mvt" ->
+                                character.setMvt(Integer.parseInt(value));
+                            case "strength" ->
+                                character.setStrength(Integer.parseInt(value));
+                            case "intelligence" ->
+                                character.setIntelligence(Integer.parseInt(value));
+                            case "wisdom" ->
+                                character.setWisdom(Integer.parseInt(value));
+                            case "dexterity" ->
+                                character.setDexterity(Integer.parseInt(value));
+                            case "constitution" ->
+                                character.setConstitution(Integer.parseInt(value));
+                            case "charisma" ->
+                                character.setCharisma(Integer.parseInt(value));
+                        }
+                        characterStore.save(character);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
                 case "list" -> {
