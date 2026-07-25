@@ -193,12 +193,12 @@ public class BFCharacter {
         }
 
         public Builder bfRace(String bfRace) {
-            bfCharacter.bfRace = bfRace;
+            bfCharacter.setBfRace(bfRace);
             return this;
         }
 
         public Builder bfClass(String bfClass) {
-            bfCharacter.bfClass = bfClass;
+            bfCharacter.setBfClass(bfClass);
             return this;
         }
 
