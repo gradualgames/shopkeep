@@ -69,6 +69,60 @@ public class ShopkeepCommands extends ListenerAdapter {
                             "maxhp",
                             "max hit points",
                             false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "ac",
+                            "armor class",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "atk",
+                            "attack bonus",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "mvt",
+                            "movement",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "strength",
+                            "strength",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "intelligence",
+                            "intelligence",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "wisdom",
+                            "wisdom",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "dexterity",
+                            "dexterity",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "constitution",
+                            "constitution",
+                            false
+                        )
+                        .addOption(
+                            OptionType.INTEGER,
+                            "charisma",
+                            "charisma",
+                            false
                         ),
                     new SubcommandData("list", "List characters")
                 )

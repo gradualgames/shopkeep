@@ -1,5 +1,7 @@
 package com.gradualgames.shopkeep.character;
 
+import java.util.List;
+
 public class BFCharacter {
 
     private String name;
@@ -35,6 +37,8 @@ public class BFCharacter {
     private Integer constitution;
 
     private Integer charisma;
+
+    private List<SpecialAbility> specialAbilities;
 
     public BFCharacter() {
     }
@@ -173,6 +177,14 @@ public class BFCharacter {
 
     public void setCharisma(Integer charisma) {
         this.charisma = charisma;
+    }
+
+    public List<SpecialAbility> getSpecialAbilities() {
+        return specialAbilities;
+    }
+
+    public void setSpecialAbilities(List<SpecialAbility> specialAbilities) {
+        this.specialAbilities = specialAbilities;
     }
 
     public static Builder builder() {
