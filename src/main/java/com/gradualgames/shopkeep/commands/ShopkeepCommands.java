@@ -1,7 +1,7 @@
 package com.gradualgames.shopkeep.commands;
 
-import com.gradualgames.shopkeep.character.BFCharacter;
-import com.gradualgames.shopkeep.character.BFCharacterStore;
+import com.gradualgames.shopkeep.character.Character;
+import com.gradualgames.shopkeep.character.CharacterStore;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -15,10 +15,10 @@ import java.io.IOException;
 
 public class ShopkeepCommands extends ListenerAdapter {
 
-    private BFCharacterStore bfCharacterStore;
+    private CharacterStore characterStore;
 
     public ShopkeepCommands() throws IOException {
-        bfCharacterStore = new BFCharacterStore();
+        characterStore = new CharacterStore();
     }
 
     public void registerCommands(Guild guild) {
@@ -146,7 +146,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                 case "create" -> {
                     String name = event.getOption("name").getAsString();
                     String race = event.getOption("race").getAsString();
-                    String bfClass = event.getOption("class").getAsString();
+                    String charClass = event.getOption("class").getAsString();
                     Integer level = event.getOption("level", null, OptionMapping::getAsInt);
                     Integer gp = event.getOption("gp", null, OptionMapping::getAsInt);
                     Integer xp = event.getOption("xp", null, OptionMapping::getAsInt);
@@ -161,11 +161,11 @@ public class ShopkeepCommands extends ListenerAdapter {
                     Integer constitution = event.getOption("constitution", null, OptionMapping::getAsInt);
                     Integer charisma = event.getOption("charisma", null, OptionMapping::getAsInt);
 
-                    BFCharacter.Builder builder = new BFCharacter.Builder();
-                    BFCharacter bfCharacter =
+                    Character.Builder builder = new Character.Builder();
+                    Character character =
                         builder.name(name)
-                            .bfRace(race)
-                            .bfClass(bfClass)
+                            .race(race)
+                            .charClass(charClass)
                             .level(level)
                             .gp(gp)
                             .xp(xp)
@@ -182,7 +182,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                             .build();
 
                     try {
-                        bfCharacterStore.save(bfCharacter);
+                        characterStore.save(character);
                     } catch (IOException e) {
                         System.out.println("Error, could not safe character.");
                         throw new RuntimeException(e);

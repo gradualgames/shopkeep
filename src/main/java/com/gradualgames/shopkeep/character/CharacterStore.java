@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class BFCharacterStore {
+public class CharacterStore {
 
     private final ObjectMapper mapper =
         new ObjectMapper()
@@ -21,11 +21,11 @@ public class BFCharacterStore {
     private final Path characterDirectory =
         Path.of("data", "characters");
 
-    public BFCharacterStore() throws IOException {
+    public CharacterStore() throws IOException {
         Files.createDirectories(characterDirectory);
     }
 
-    public void save(BFCharacter character) throws IOException {
+    public void save(Character character) throws IOException {
         Path file =
             characterDirectory.resolve(character.getName() + ".json");
         mapper.writeValue(file.toFile(), character);

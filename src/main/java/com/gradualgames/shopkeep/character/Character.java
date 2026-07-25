@@ -2,13 +2,13 @@ package com.gradualgames.shopkeep.character;
 
 import java.util.List;
 
-public class BFCharacter {
+public class Character {
 
     private String name;
 
-    private String bfRace;
+    private String race;
 
-    private String bfClass;
+    private String charClass;
 
     private Integer level;
 
@@ -40,7 +40,7 @@ public class BFCharacter {
 
     private List<SpecialAbility> specialAbilities;
 
-    public BFCharacter() {
+    public Character() {
     }
 
     public String getName() {
@@ -51,20 +51,20 @@ public class BFCharacter {
         this.name = name;
     }
 
-    public String getBfRace() {
-        return bfRace;
+    public String getRace() {
+        return race;
     }
 
-    public void setBfRace(String bfRace) {
-        this.bfRace = bfRace;
+    public void setRace(String race) {
+        this.race = race;
     }
 
-    public String getBfClass() {
-        return bfClass;
+    public String getCharClass() {
+        return charClass;
     }
 
-    public void setBfClass(String bfClass) {
-        this.bfClass = bfClass;
+    public void setCharClass(String charClass) {
+        this.charClass = charClass;
     }
 
     public Integer getLevel() {
@@ -193,99 +193,99 @@ public class BFCharacter {
 
     public static class Builder {
 
-        BFCharacter bfCharacter;
+        Character character;
 
         public Builder() {
-            bfCharacter = new BFCharacter();
+            character = new Character();
         }
 
         public Builder name(String name) {
-            bfCharacter.setName(name);
+            character.setName(name);
             return this;
         }
 
-        public Builder bfRace(String bfRace) {
-            bfCharacter.setBfRace(bfRace);
+        public Builder race(String race) {
+            character.setRace(race);
             return this;
         }
 
-        public Builder bfClass(String bfClass) {
-            bfCharacter.setBfClass(bfClass);
+        public Builder charClass(String charClass) {
+            character.setCharClass(charClass);
             return this;
         }
 
         public Builder level(Integer level) {
-            bfCharacter.setLevel(level);
+            character.setLevel(level);
             return this;
         }
 
         public Builder gp(Integer gp) {
-            bfCharacter.setGp(gp);
+            character.setGp(gp);
             return this;
         }
 
         public Builder xp(Integer xp) {
-            bfCharacter.setXp(xp);
+            character.setXp(xp);
             return this;
         }
 
         public Builder hp(Integer hp) {
-            bfCharacter.setHp(hp);
+            character.setHp(hp);
             return this;
         }
 
         public Builder maxHp(Integer maxHp) {
-            bfCharacter.setMaxHp(maxHp);
+            character.setMaxHp(maxHp);
             return this;
         }
 
         public Builder ac(Integer ac) {
-            bfCharacter.setAc(ac);
+            character.setAc(ac);
             return this;
         }
 
         public Builder atk(Integer atk) {
-            bfCharacter.setAtk(atk);
+            character.setAtk(atk);
             return this;
         }
 
         public Builder mvt(Integer mvt) {
-            bfCharacter.setMvt(mvt);
+            character.setMvt(mvt);
             return this;
         }
 
         public Builder strength(Integer strength) {
-            bfCharacter.setStrength(strength);
+            character.setStrength(strength);
             return this;
         }
 
         public Builder intelligence(Integer intelligence) {
-            bfCharacter.setIntelligence(intelligence);
+            character.setIntelligence(intelligence);
             return this;
         }
 
         public Builder wisdom(Integer wisdom) {
-            bfCharacter.setWisdom(wisdom);
+            character.setWisdom(wisdom);
             return this;
         }
 
         public Builder dexterity(Integer dexterity) {
-            bfCharacter.setDexterity(dexterity);
+            character.setDexterity(dexterity);
             return this;
         }
 
         public Builder constitution(Integer constitution) {
-            bfCharacter.setConstitution(constitution);
+            character.setConstitution(constitution);
             return this;
         }
 
         public Builder charisma(Integer charisma) {
-            bfCharacter.setCharisma(charisma);
+            character.setCharisma(charisma);
             return this;
         }
 
-        public BFCharacter build() {
-            return bfCharacter;
+        public Character build() {
+            return character;
         }
     }
 }
