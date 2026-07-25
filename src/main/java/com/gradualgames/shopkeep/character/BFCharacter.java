@@ -10,6 +10,8 @@ public class BFCharacter {
 
     private Integer level;
 
+    private Integer gp;
+
     private Integer xp;
 
     private Integer hp;
@@ -19,6 +21,8 @@ public class BFCharacter {
     private Integer ac;
 
     private Integer atk;
+
+    private Integer mvt;
 
     private Integer strength;
 
@@ -67,6 +71,14 @@ public class BFCharacter {
         this.level = level;
     }
 
+    public Integer getGp() {
+        return gp;
+    }
+
+    public void setGp(Integer gp) {
+        this.gp = gp;
+    }
+
     public Integer getXp() {
         return xp;
     }
@@ -105,6 +117,14 @@ public class BFCharacter {
 
     public void setAtk(Integer atk) {
         this.atk = atk;
+    }
+
+    public Integer getMvt() {
+        return mvt;
+    }
+
+    public void setMvt(Integer mvt) {
+        this.mvt = mvt;
     }
 
     public Integer getStrength() {
@@ -187,6 +207,11 @@ public class BFCharacter {
             return this;
         }
 
+        public Builder gp(Integer gp) {
+            bfCharacter.setGp(gp);
+            return this;
+        }
+
         public Builder xp(Integer xp) {
             bfCharacter.setXp(xp);
             return this;
@@ -209,6 +234,11 @@ public class BFCharacter {
 
         public Builder atk(Integer atk) {
             bfCharacter.setAtk(atk);
+            return this;
+        }
+
+        public Builder mvt(Integer mvt) {
+            bfCharacter.setMvt(mvt);
             return this;
         }
 

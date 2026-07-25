@@ -94,9 +94,18 @@ public class ShopkeepCommands extends ListenerAdapter {
                     String race = event.getOption("race").getAsString();
                     String bfClass = event.getOption("class").getAsString();
                     Integer level = event.getOption("level", null, OptionMapping::getAsInt);
+                    Integer gp = event.getOption("gp", null, OptionMapping::getAsInt);
                     Integer xp = event.getOption("xp", null, OptionMapping::getAsInt);
                     Integer hp = event.getOption("hp", null, OptionMapping::getAsInt);
                     Integer maxHp = event.getOption("maxhp", null, OptionMapping::getAsInt);
+                    Integer ac = event.getOption("ac", null, OptionMapping::getAsInt);
+                    Integer atk = event.getOption("atk", null, OptionMapping::getAsInt);
+                    Integer strength = event.getOption("strength", null, OptionMapping::getAsInt);
+                    Integer intelligence = event.getOption("intelligence", null, OptionMapping::getAsInt);
+                    Integer wisdom = event.getOption("wisdom", null, OptionMapping::getAsInt);
+                    Integer dexterity = event.getOption("dexterity", null, OptionMapping::getAsInt);
+                    Integer constitution = event.getOption("constitution", null, OptionMapping::getAsInt);
+                    Integer charisma = event.getOption("charisma", null, OptionMapping::getAsInt);
 
                     BFCharacter.Builder builder = new BFCharacter.Builder();
                     BFCharacter bfCharacter =
@@ -104,9 +113,18 @@ public class ShopkeepCommands extends ListenerAdapter {
                             .bfRace(race)
                             .bfClass(bfClass)
                             .level(level)
+                            .gp(gp)
                             .xp(xp)
                             .hp(hp)
                             .maxHp(maxHp)
+                            .ac(ac)
+                            .atk(atk)
+                            .strength(strength)
+                            .intelligence(intelligence)
+                            .wisdom(wisdom)
+                            .dexterity(dexterity)
+                            .constitution(constitution)
+                            .charisma(charisma)
                             .build();
 
                     try {
