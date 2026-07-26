@@ -33,6 +33,7 @@ public class ShopkeepCommands extends ListenerAdapter {
     public void registerCommands(Guild guild) {
         guild.upsertCommand("hello", "Tell Shopkeep to say hello")
             .queue();
+
         guild.upsertCommand(
             Commands.slash("create", "Create a character")
                 .addOption(OptionType.STRING, "name", "name", true)
@@ -55,14 +56,28 @@ public class ShopkeepCommands extends ListenerAdapter {
         ).queue();
 
         guild.upsertCommand(
-            Commands.slash("play", "Play a character in a given campaign.")
-                .addOption(OptionType.STRING, "character-name", "Character name", true)
+            Commands.slash("update", "Update a character")
+                .addOption(OptionType.STRING, "race", "race", false)
+                .addOption(OptionType.STRING, "class", "class", false)
+                .addOption(OptionType.INTEGER, "level", "level", false)
+                .addOption(OptionType.INTEGER, "gp", "gold", false)
+                .addOption(OptionType.INTEGER, "xp", "experience", false)
+                .addOption(OptionType.INTEGER, "hp", "hit points", false)
+                .addOption(OptionType.INTEGER, "maxhp", "max hit points", false)
+                .addOption(OptionType.INTEGER, "ac", "armor class", false)
+                .addOption(OptionType.INTEGER, "atk", "attack bonus", false)
+                .addOption(OptionType.INTEGER, "mvt", "movement", false)
+                .addOption(OptionType.INTEGER, "strength", "strength", false)
+                .addOption(OptionType.INTEGER, "intelligence", "intelligence", false)
+                .addOption(OptionType.INTEGER, "wisdom", "wisdom", false)
+                .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
+                .addOption(OptionType.INTEGER, "constitution", "constitution", false)
+                .addOption(OptionType.INTEGER, "charisma", "charisma", false)
         ).queue();
 
         guild.upsertCommand(
-            Commands.slash("update", "Update a character stat")
-                .addOption(OptionType.STRING, "stat", "Stat name", true)
-                .addOption(OptionType.STRING, "value", "Stat value", true)
+            Commands.slash("play", "Play a character in a given campaign.")
+                .addOption(OptionType.STRING, "character-name", "Character name", true)
         ).queue();
 
         guild.upsertCommand(
@@ -190,6 +205,66 @@ public class ShopkeepCommands extends ListenerAdapter {
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
+            case "update" -> {
+                if (characterName == null) {
+                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
+                    return;
+                }
+                String race = event.getOption("race", null, OptionMapping::getAsString);
+                String charClass = event.getOption("class", null, OptionMapping::getAsString);
+                Integer level = event.getOption("level", null, OptionMapping::getAsInt);
+                Integer gp = event.getOption("gp", null, OptionMapping::getAsInt);
+                Integer xp = event.getOption("xp", null, OptionMapping::getAsInt);
+                Integer hp = event.getOption("hp", null, OptionMapping::getAsInt);
+                Integer maxHp = event.getOption("maxhp", null, OptionMapping::getAsInt);
+                Integer ac = event.getOption("ac", null, OptionMapping::getAsInt);
+                Integer atk = event.getOption("atk", null, OptionMapping::getAsInt);
+                Integer mvt = event.getOption("mvt", null, OptionMapping::getAsInt);
+                Integer strength = event.getOption("strength", null, OptionMapping::getAsInt);
+                Integer intelligence = event.getOption("intelligence", null, OptionMapping::getAsInt);
+                Integer wisdom = event.getOption("wisdom", null, OptionMapping::getAsInt);
+                Integer dexterity = event.getOption("dexterity", null, OptionMapping::getAsInt);
+                Integer constitution = event.getOption("constitution", null, OptionMapping::getAsInt);
+                Integer charisma = event.getOption("charisma", null, OptionMapping::getAsInt);
+
+                Character.Builder builder = new Character.Builder();
+                Character character =
+                    builder.name(characterName)
+                        .race(race)
+                        .charClass(charClass)
+                        .level(level)
+                        .gp(gp)
+                        .xp(xp)
+                        .hp(hp)
+                        .maxHp(maxHp)
+                        .ac(ac)
+                        .atk(atk)
+                        .mvt(mvt)
+                        .strength(strength)
+                        .intelligence(intelligence)
+                        .wisdom(wisdom)
+                        .dexterity(dexterity)
+                        .constitution(constitution)
+                        .charisma(charisma)
+                        .build();
+
+                try {
+                    characterStore.save(guildId, campaignName, character);
+                    log.info(
+                        "Updated character '{}' in campaign '{}'.",
+                        characterName,
+                        campaignName
+                    );
+                } catch (IOException e) {
+                    log.error("Could not save character '{}'.", characterName, e);
+                }
+                event.reply("Done").setEphemeral(true).queue();
+            }
             case "play" -> {
                 String playCharacterName = event.getOption("character-name").getAsString();
 
@@ -204,67 +279,6 @@ public class ShopkeepCommands extends ListenerAdapter {
                     log.error("Could not play character '{}'.", playCharacterName, e);
                 }
                 event.reply("Done.").setEphemeral(true).queue();
-            }
-            case "update" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
-                String stat = event.getOption("stat").getAsString();
-                String value = event.getOption("value").getAsString();
-                Character character = null;
-                try {
-                    character = characterStore.load(guildId, campaignName, characterName);
-                    switch(stat) {
-                        case "race" ->
-                            character.setRace(value);
-                        case "class" ->
-                            character.setCharClass(value);
-                        case "level" ->
-                            character.setLevel(Integer.parseInt(value));
-                        case "gp" ->
-                            character.setGp(Integer.parseInt(value));
-                        case "xp" ->
-                            character.setXp(Integer.parseInt(value));
-                        case "hp" ->
-                            character.setHp(Integer.parseInt(value));
-                        case "maxhp" ->
-                            character.setMaxHp(Integer.parseInt(value));
-                        case "ac" ->
-                            character.setAc(Integer.parseInt(value));
-                        case "atk" ->
-                            character.setAtk(Integer.parseInt(value));
-                        case "mvt" ->
-                            character.setMvt(Integer.parseInt(value));
-                        case "strength" ->
-                            character.setStrength(Integer.parseInt(value));
-                        case "intelligence" ->
-                            character.setIntelligence(Integer.parseInt(value));
-                        case "wisdom" ->
-                            character.setWisdom(Integer.parseInt(value));
-                        case "dexterity" ->
-                            character.setDexterity(Integer.parseInt(value));
-                        case "constitution" ->
-                            character.setConstitution(Integer.parseInt(value));
-                        case "charisma" ->
-                            character.setCharisma(Integer.parseInt(value));
-                    }
-                    characterStore.save(guildId, campaignName, character);
-                    log.info(
-                        "Updated {}.{} = {}",
-                        characterName,
-                        stat,
-                        value
-                    );
-                } catch (IOException e) {
-                    log.error("Failed to update character '{}' with stat '{}'", characterName, stat, e);
-                }
-                event.reply("Done").setEphemeral(true).queue();
             }
             case "add-ability" -> {
                 if (characterName == null) {
