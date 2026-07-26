@@ -63,6 +63,10 @@ public class ShopkeepCommands extends ListenerAdapter {
                         .addOption(OptionType.STRING, "name", "Name of character to add saving throw to", true)
                         .addOption(OptionType.STRING, "type", "Saving throw type", true)
                         .addOption(OptionType.INTEGER, "value", "Saving throw value", true),
+                    new SubcommandData("add-equipment", "Add equipment to character")
+                        .addOption(OptionType.STRING, "name", "Name of character to add equipment to", true)
+                        .addOption(OptionType.STRING, "type", "Equipment type", true)
+                        .addOption(OptionType.INTEGER, "quantity", "Equipment quantity", true),
                     new SubcommandData("update", "Updates a character stat.")
                         .addOption(OptionType.STRING, "name", "Character name", true)
                         .addOption(OptionType.STRING, "stat", "Stat name", true)
@@ -216,6 +220,20 @@ public class ShopkeepCommands extends ListenerAdapter {
                         characterStore.save(character);
                     } catch (IOException e) {
                         log.error("Could not add saving throw to character.");
+                    }
+                    event.reply("Done").queue();
+                }
+                case "add-equipment" -> {
+                    String name = event.getOption("name").getAsString();
+                    String type = event.getOption("type").getAsString();
+                    Integer quantity = event.getOption("quantity").getAsInt();
+                    Character character = null;
+                    try {
+                        character = characterStore.load(name);
+                        character.getEquipment().putIfAbsent(type, quantity);
+                        characterStore.save(character);
+                    } catch (IOException e) {
+                        log.error("Could not add equipment to character.");
                     }
                     event.reply("Done").queue();
                 }

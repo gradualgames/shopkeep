@@ -46,10 +46,13 @@ public class Character {
 
     private Map<String, Integer> savingThrows;
 
+    private Map<String, Integer> equipment;
+
     public Character() {
         specialAbilities = new HashMap<>();
         spells = new HashMap<>();
         savingThrows = new HashMap<>();
+        equipment = new HashMap<>();
     }
 
     public String getName() {
@@ -212,6 +215,14 @@ public class Character {
         this.savingThrows = savingThrows;
     }
 
+    public Map<String, Integer> getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Map<String, Integer> equipment) {
+        this.equipment = equipment;
+    }
+
     @Override
     public String toString() {
         return """
@@ -240,6 +251,8 @@ public class Character {
         🪄 **Spells:** %s
         
         🛡️ **Saving Throws:** %s
+        
+        🎒 **Equipment:** %s
         """
             .formatted(
                 name,
@@ -267,7 +280,10 @@ public class Character {
                     : spells,
                 savingThrows == null || savingThrows.isEmpty()
                     ? "None"
-                    : savingThrows
+                    : savingThrows,
+                equipment == null || equipment.isEmpty()
+                    ? "None"
+                    : equipment
             );
     }
 
