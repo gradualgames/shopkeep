@@ -47,4 +47,23 @@ public class PlayerStore extends Store {
 
         mapper.writeValue(path.toFile(), players);
     }
+
+    public String load(long guildId, String campaignName, long userId) throws IOException {
+        Path campaignDirectory =
+            getCampaignDirectory(guildId, campaignName);
+
+        Path path = campaignDirectory.resolve(PLAYERS_FILE);
+
+        if (!Files.exists(path)) {
+            return null;
+        }
+
+        Map<String, String> players =
+            mapper.readValue(
+                path.toFile(),
+                new TypeReference<Map<String, String>>() {}
+            );
+
+        return players.get(Long.toString(userId));
+    }
 }
