@@ -1,4 +1,4 @@
-package com.gradualgames.shopkeep.character;
+package com.gradualgames.shopkeep.store;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class PlayerStore extends Store {

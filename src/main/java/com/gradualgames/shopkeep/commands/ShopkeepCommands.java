@@ -1,8 +1,8 @@
 package com.gradualgames.shopkeep.commands;
 
 import com.gradualgames.shopkeep.character.Character;
-import com.gradualgames.shopkeep.character.CharacterStore;
-import com.gradualgames.shopkeep.character.PlayerStore;
+import com.gradualgames.shopkeep.store.CharacterStore;
+import com.gradualgames.shopkeep.store.PlayerStore;
 import com.gradualgames.shopkeep.character.Weapon;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

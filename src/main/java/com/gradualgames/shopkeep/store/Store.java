@@ -1,4 +1,4 @@
-package com.gradualgames.shopkeep.character;
+package com.gradualgames.shopkeep.store;
 
 import java.nio.file.Path;
 import java.util.Locale;

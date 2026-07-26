@@ -1,13 +1,13 @@
-package com.gradualgames.shopkeep.character;
+package com.gradualgames.shopkeep.store;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.gradualgames.shopkeep.character.Character;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Locale;
 
 public class CharacterStore extends Store {
 
@@ -24,7 +24,7 @@ public class CharacterStore extends Store {
     public CharacterStore() {
     }
 
-    public void save(long guildId, String campaignName, Character character) throws IOException {
+    public void save(long guildId, String campaignName, com.gradualgames.shopkeep.character.Character character) throws IOException {
         Path characterPath = getCampaignDirectory(guildId, campaignName).resolve(CHARACTER_PATH);
         Files.createDirectories(characterPath);
         mapper.writeValue(
@@ -33,7 +33,7 @@ public class CharacterStore extends Store {
         );
     }
 
-    public Character load(long guildId, String campaignName, String characterName) throws IOException {
+    public com.gradualgames.shopkeep.character.Character load(long guildId, String campaignName, String characterName) throws IOException {
         Path characterPath = getCampaignDirectory(guildId, campaignName).resolve(CHARACTER_PATH);
         return mapper.readValue(
             characterFile(characterPath, characterName).toFile(),
