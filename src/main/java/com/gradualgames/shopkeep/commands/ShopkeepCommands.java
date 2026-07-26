@@ -117,10 +117,20 @@ public class ShopkeepCommands extends ListenerAdapter {
         long userId = event.getUser().getIdLong();
         String campaignName = event.getChannel().getName();
         String characterName = null;
+
+        log.info(
+            "Command /{} from {} ({}) in guild={} campaign={}",
+            event.getName(),
+            event.getUser().getName(),
+            userId,
+            guildId,
+            campaignName
+        );
+
         try {
             characterName = playerStore.load(guildId, campaignName, userId);
         } catch (IOException e) {
-            log.error("Could not load user's character.");
+            log.error("Could not load player's claimed character.", e);
         }
 
         if (event.getName().equals("hello")) {
@@ -170,8 +180,13 @@ public class ShopkeepCommands extends ListenerAdapter {
 
                 try {
                     characterStore.save(guildId, campaignName, character);
+                    log.info(
+                        "Created character '{}' in campaign '{}'.",
+                        name,
+                        campaignName
+                    );
                 } catch (IOException e) {
-                    log.error("Error, could not save character.");
+                    log.error("Could not save character '{}'.", name, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
@@ -180,14 +195,24 @@ public class ShopkeepCommands extends ListenerAdapter {
 
                 try {
                     playerStore.save(guildId, campaignName, userId, playCharacterName);
+                    log.info(
+                        "User {} is now playing '{}'.",
+                        userId,
+                        playCharacterName
+                    );
                 } catch (IOException e) {
-                    log.error("Could not play character.");
+                    log.error("Could not play character '{}'.", playCharacterName, e);
                 }
                 event.reply("Done.").setEphemeral(true).queue();
             }
             case "update" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 String stat = event.getOption("stat").getAsString();
@@ -230,14 +255,25 @@ public class ShopkeepCommands extends ListenerAdapter {
                             character.setCharisma(Integer.parseInt(value));
                     }
                     characterStore.save(guildId, campaignName, character);
+                    log.info(
+                        "Updated {}.{} = {}",
+                        characterName,
+                        stat,
+                        value
+                    );
                 } catch (IOException e) {
-                    log.error("Failed to update character stat.");
+                    log.error("Failed to update character '{}' with stat '{}'", characterName, stat, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-ability" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 String type = event.getOption("type").getAsString();
@@ -246,14 +282,20 @@ public class ShopkeepCommands extends ListenerAdapter {
                     Character character = characterStore.load(guildId, campaignName, characterName);
                     character.getSpecialAbilities().putIfAbsent(type, description);
                     characterStore.save(guildId, campaignName, character);
+                    log.info("Added ability '{}' to '{}'.", type, characterName);
                 } catch (IOException e) {
-                    log.error("Failed to load character: " + characterName);
+                    log.error("Failed to load character '{}'", characterName, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-spell" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 String type = event.getOption("type").getAsString();
@@ -262,14 +304,20 @@ public class ShopkeepCommands extends ListenerAdapter {
                     Character character = characterStore.load(guildId, campaignName, characterName);
                     character.getSpells().putIfAbsent(type, description);
                     characterStore.save(guildId, campaignName, character);
+                    log.info("Added spell '{}' to '{}'.", type, characterName);
                 } catch (IOException e) {
-                    log.error("Failed to load character: " + characterName);
+                    log.error("Failed to load character '{}'", characterName, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-saving-throw" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 String type = event.getOption("type").getAsString();
@@ -279,14 +327,20 @@ public class ShopkeepCommands extends ListenerAdapter {
                     character = characterStore.load(guildId, campaignName, characterName);
                     character.getSavingThrows().putIfAbsent(type, value);
                     characterStore.save(guildId, campaignName, character);
+                    log.info("Added saving throw '{}'={} to '{}'.", type, value, characterName);
                 } catch (IOException e) {
-                    log.error("Could not add saving throw to character.");
+                    log.error("Could not add saving throw to character '{}'", characterName, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-equipment" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 String type = event.getOption("type").getAsString();
@@ -296,14 +350,25 @@ public class ShopkeepCommands extends ListenerAdapter {
                     character = characterStore.load(guildId, campaignName, characterName);
                     character.getEquipment().putIfAbsent(type, quantity);
                     characterStore.save(guildId, campaignName, character);
+                    log.info(
+                        "Added equipment '{}' x{} to '{}'.",
+                        type,
+                        quantity,
+                        characterName
+                    );
                 } catch (IOException e) {
-                    log.error("Could not add equipment to character.");
+                    log.error("Could not add equipment to character '{}'", characterName, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-weapon" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 String type = event.getOption("type").getAsString();
@@ -317,21 +382,28 @@ public class ShopkeepCommands extends ListenerAdapter {
                     Character character = characterStore.load(guildId, campaignName, characterName);
                     character.getWeapons().putIfAbsent(type, weapon);
                     characterStore.save(guildId, campaignName, character);
+                    log.info("Added weapon '{}' to '{}'.", type, characterName);
                 } catch (IOException e) {
-                    log.error("Could not add weapon to character.");
+                    log.error("Could not add weapon to '{}'.", characterName, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "sheet" -> {
                 if (characterName == null) {
                     event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    log.warn(
+                        "User {} attempted /{} without claiming a character.",
+                        userId,
+                        event.getName()
+                    );
                     return;
                 }
                 try {
                     Character character = characterStore.load(guildId, campaignName, characterName);
+                    log.info("Displayed character sheet for '{}'.", characterName);
                     event.reply(character.toString()).setEphemeral(true).queue();;
                 } catch (IOException e) {
-                    log.error("Could not load character: " + characterName);
+                    log.error("Could not load character '{}'", characterName, e);
                 }
             }
         }
