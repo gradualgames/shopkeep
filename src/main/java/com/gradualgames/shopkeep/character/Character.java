@@ -190,6 +190,55 @@ public class Character {
         this.specialAbilities = specialAbilities;
     }
 
+    @Override
+    public String toString() {
+        return """
+        🧙 **%s**
+        🧬 **Race:** %s
+        ⚔️ **Class:** %s
+        ⭐ **Level:** %d
+        
+        ❤️ **HP:** %d/%d
+        🛡️ **AC:** %d
+        🗡️ **Atk:** +%d
+        👣 **Mvt:** %d
+        
+        💰 **GP:** %d
+        ✨ **XP:** %d
+        
+        💪 STR: %d
+        🧠 INT: %d
+        🙏 WIS: %d
+        🏃 DEX: %d
+        🫀 CON: %d
+        😄 CHA: %d
+        
+        ✨ **Special Abilities:** %s
+        """
+            .formatted(
+                name,
+                race,
+                charClass,
+                level,
+                hp,
+                maxHp,
+                ac,
+                atk,
+                mvt,
+                gp,
+                xp,
+                strength,
+                intelligence,
+                wisdom,
+                dexterity,
+                constitution,
+                charisma,
+                specialAbilities == null || specialAbilities.isEmpty()
+                    ? "None"
+                    : specialAbilities
+            );
+    }
+
     public static Builder builder() {
         return new Builder();
     }

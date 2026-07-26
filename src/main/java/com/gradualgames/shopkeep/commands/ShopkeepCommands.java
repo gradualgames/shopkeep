@@ -10,10 +10,14 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class ShopkeepCommands extends ListenerAdapter {
+
+    private static final Logger log = LoggerFactory.getLogger(ShopkeepCommands.class);
 
     private CharacterStore characterStore;
 
@@ -45,7 +49,8 @@ public class ShopkeepCommands extends ListenerAdapter {
                         .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
                         .addOption(OptionType.INTEGER, "constitution", "constitution", false)
                         .addOption(OptionType.INTEGER, "charisma", "charisma", false),
-                    new SubcommandData("list", "List characters"),
+                    new SubcommandData("list-stats", "List character stats")
+                        .addOption(OptionType.STRING, "name", "name"),
                     new SubcommandData("add-ability", "Add special ability to character")
                         .addOption(OptionType.STRING, "name", "Name of character to add ability to", true)
                         .addOption(OptionType.STRING, "type", "Ability type", true)
@@ -61,13 +66,13 @@ public class ShopkeepCommands extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
         super.onReady(event);
-        System.out.println("onReady() called.");
+        log.info("onReady() called.");
     }
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (event.getName().equals("hello")) {
-            System.out.println("hello command received.");
+            log.info("hello command received.");
             event.reply("Lamp oil. Rope? Bombs? You want it? It's yours, my friend. As long as you have enough slash commands.").queue();
         }
         if (event.getName().equals("character")) {
@@ -115,11 +120,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                     try {
                         characterStore.save(character);
                     } catch (IOException e) {
-                        System.out.println("Error, could not safe character.");
-                        throw new RuntimeException(e);
+                        log.error("Error, could not save character.");
                     }
-
-                    System.out.println("character create command received.");
+                    event.reply("Done").queue();
                 }
                 case "add-ability" -> {
                     String name = event.getOption("name").getAsString();
@@ -130,8 +133,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                         character.getSpecialAbilities().putIfAbsent(type, description);
                         characterStore.save(character);
                     } catch (IOException e) {
-                        System.out.println("Failed to load character: " + name);
+                        log.error("Failed to load character: " + name);
                     }
+                    event.reply("Done").queue();
                 }
                 case "update" -> {
                     String name = event.getOption("name").getAsString();
@@ -178,12 +182,18 @@ public class ShopkeepCommands extends ListenerAdapter {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    event.reply("Done").queue();
                 }
-                case "list" -> {
-                    System.out.println("character list command received.");
+                case "list-stats" -> {
+                    String name = event.getOption("name").getAsString();
+                    try {
+                        Character character = characterStore.load(name);
+                        event.reply(character.toString()).queue();;
+                    } catch (IOException e) {
+                        log.error("Could not load character: " + name);
+                    }
                 }
             }
-            event.reply("Done").queue();
         }
     }
 }
