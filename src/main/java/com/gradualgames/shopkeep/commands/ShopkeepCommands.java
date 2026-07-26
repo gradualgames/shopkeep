@@ -59,6 +59,10 @@ public class ShopkeepCommands extends ListenerAdapter {
                         .addOption(OptionType.STRING, "name", "Name of character to add spell to", true)
                         .addOption(OptionType.STRING, "type", "Spell type", true)
                         .addOption(OptionType.STRING, "description", "Spell description", true),
+                    new SubcommandData("add-saving-throw", "Add saving throw to character")
+                        .addOption(OptionType.STRING, "name", "Name of character to add saving throw to", true)
+                        .addOption(OptionType.STRING, "type", "Saving throw type", true)
+                        .addOption(OptionType.INTEGER, "value", "Saving throw value", true),
                     new SubcommandData("update", "Updates a character stat.")
                         .addOption(OptionType.STRING, "name", "Character name", true)
                         .addOption(OptionType.STRING, "stat", "Stat name", true)
@@ -197,7 +201,21 @@ public class ShopkeepCommands extends ListenerAdapter {
                         }
                         characterStore.save(character);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        log.error("Failed to update character stat.");
+                    }
+                    event.reply("Done").queue();
+                }
+                case "add-saving-throw" -> {
+                    String name = event.getOption("name").getAsString();
+                    String type = event.getOption("type").getAsString();
+                    Integer value = event.getOption("value").getAsInt();
+                    Character character = null;
+                    try {
+                        character = characterStore.load(name);
+                        character.getSavingThrows().putIfAbsent(type, value);
+                        characterStore.save(character);
+                    } catch (IOException e) {
+                        log.error("Could not add saving throw to character.");
                     }
                     event.reply("Done").queue();
                 }
