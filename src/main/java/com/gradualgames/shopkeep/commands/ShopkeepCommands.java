@@ -2,6 +2,7 @@ package com.gradualgames.shopkeep.commands;
 
 import com.gradualgames.shopkeep.character.Character;
 import com.gradualgames.shopkeep.character.CharacterStore;
+import com.gradualgames.shopkeep.character.Weapon;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -67,6 +68,14 @@ public class ShopkeepCommands extends ListenerAdapter {
                         .addOption(OptionType.STRING, "name", "Name of character to add equipment to", true)
                         .addOption(OptionType.STRING, "type", "Equipment type", true)
                         .addOption(OptionType.INTEGER, "quantity", "Equipment quantity", true),
+                    new SubcommandData("add-weapon", "Add weapon to character")
+                        .addOption(OptionType.STRING, "name", "Name of character to add weapon to", true)
+                        .addOption(OptionType.STRING, "type", "Weapon type", true)
+                        .addOption(OptionType.STRING, "damage", "Weapon damage dice", true)
+                        .addOption(OptionType.STRING, "range", "Weapon range type", true)
+                        .addOption(OptionType.INTEGER, "short", "Short range bonus/penalty", false)
+                        .addOption(OptionType.INTEGER, "medium", "Medium range bonus/penalty", false)
+                        .addOption(OptionType.INTEGER, "long", "Long range bonus/penalty", false),
                     new SubcommandData("update", "Updates a character stat.")
                         .addOption(OptionType.STRING, "name", "Character name", true)
                         .addOption(OptionType.STRING, "stat", "Stat name", true)
@@ -234,6 +243,24 @@ public class ShopkeepCommands extends ListenerAdapter {
                         characterStore.save(character);
                     } catch (IOException e) {
                         log.error("Could not add equipment to character.");
+                    }
+                    event.reply("Done").queue();
+                }
+                case "add-weapon" -> {
+                    String name = event.getOption("name").getAsString();
+                    String type = event.getOption("type").getAsString();
+                    String damage = event.getOption("damage").getAsString();
+                    String range = event.getOption("range").getAsString();
+                    Integer rshort = event.getOption("short", null, OptionMapping::getAsInt);
+                    Integer rmedium = event.getOption("medium", null, OptionMapping::getAsInt);
+                    Integer rlong = event.getOption("long", null, OptionMapping::getAsInt);
+                    Weapon weapon = new Weapon(damage, range, rshort, rmedium, rlong);
+                    try {
+                        Character character = characterStore.load(name);
+                        character.getWeapons().putIfAbsent(type, weapon);
+                        characterStore.save(character);
+                    } catch (IOException e) {
+                        log.error("Could not add weapon to character.");
                     }
                     event.reply("Done").queue();
                 }
