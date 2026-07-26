@@ -104,7 +104,8 @@ public class ShopkeepCommands extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
-        //TODO: We load this from a file that has a map of userId to characterName
+        long guildId = event.getGuild().getIdLong();
+        String campaignName = "The Rumor of the Burnished Orb";
         String characterName = "Evangeline";
 
         if (event.getName().equals("hello")) {
@@ -153,7 +154,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                         .build();
 
                 try {
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Error, could not save character.");
                 }
@@ -164,7 +165,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                 String value = event.getOption("value").getAsString();
                 Character character = null;
                 try {
-                    character = characterStore.load(characterName);
+                    character = characterStore.load(guildId, campaignName, characterName);
                     switch(stat) {
                         case "race" ->
                             character.setRace(value);
@@ -199,7 +200,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                         case "charisma" ->
                             character.setCharisma(Integer.parseInt(value));
                     }
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Failed to update character stat.");
                 }
@@ -209,9 +210,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                 String type = event.getOption("type").getAsString();
                 String description = event.getOption("description").getAsString();
                 try {
-                    Character character = characterStore.load(characterName);
+                    Character character = characterStore.load(guildId, campaignName, characterName);
                     character.getSpecialAbilities().putIfAbsent(type, description);
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Failed to load character: " + characterName);
                 }
@@ -221,9 +222,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                 String type = event.getOption("type").getAsString();
                 String description = event.getOption("description").getAsString();
                 try {
-                    Character character = characterStore.load(characterName);
+                    Character character = characterStore.load(guildId, campaignName, characterName);
                     character.getSpells().putIfAbsent(type, description);
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Failed to load character: " + characterName);
                 }
@@ -234,9 +235,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                 Integer value = event.getOption("value").getAsInt();
                 Character character = null;
                 try {
-                    character = characterStore.load(characterName);
+                    character = characterStore.load(guildId, campaignName, characterName);
                     character.getSavingThrows().putIfAbsent(type, value);
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Could not add saving throw to character.");
                 }
@@ -247,9 +248,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                 Integer quantity = event.getOption("quantity").getAsInt();
                 Character character = null;
                 try {
-                    character = characterStore.load(characterName);
+                    character = characterStore.load(guildId, campaignName, characterName);
                     character.getEquipment().putIfAbsent(type, quantity);
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Could not add equipment to character.");
                 }
@@ -264,9 +265,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                 Integer rlong = event.getOption("long", null, OptionMapping::getAsInt);
                 Weapon weapon = new Weapon(damage, range, rshort, rmedium, rlong);
                 try {
-                    Character character = characterStore.load(characterName);
+                    Character character = characterStore.load(guildId, campaignName, characterName);
                     character.getWeapons().putIfAbsent(type, weapon);
-                    characterStore.save(character);
+                    characterStore.save(guildId, campaignName, character);
                 } catch (IOException e) {
                     log.error("Could not add weapon to character.");
                 }
@@ -274,7 +275,7 @@ public class ShopkeepCommands extends ListenerAdapter {
             }
             case "sheet" -> {
                 try {
-                    Character character = characterStore.load(characterName);
+                    Character character = characterStore.load(guildId, campaignName, characterName);
                     event.reply(character.toString()).queue();;
                 } catch (IOException e) {
                     log.error("Could not load character: " + characterName);

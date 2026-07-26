@@ -19,33 +19,36 @@ public class CharacterStore {
                 false
             );
 
-    private final Path characterDirectory =
-        Path.of("data", "characters");
-
-    public CharacterStore() throws IOException {
-        Files.createDirectories(characterDirectory);
+    public CharacterStore() {
     }
 
-    public void save(Character character) throws IOException {
+    public void save(long guildId, String campaignName, Character character) throws IOException {
+        Path path = getCampaignDirectory(guildId, campaignName);
+        Files.createDirectories(path);
         mapper.writeValue(
-            characterFile(character.getName()).toFile(),
+            characterFile(path, character.getName()).toFile(),
             character
         );
     }
 
-    public Character load(String characterName) throws IOException {
+    public Character load(long guildId, String campaignName, String characterName) throws IOException {
+        Path path = getCampaignDirectory(guildId, campaignName);
         return mapper.readValue(
-            characterFile(characterName).toFile(),
+            characterFile(path, characterName).toFile(),
             Character.class
         );
     }
 
-    private Path characterFile(String characterName) {
-        String fileName = characterName
-            .trim()
-            .replace(' ', '-')
-            .toLowerCase(Locale.ROOT);
+    private Path getCampaignDirectory(long guildId, String campaignName) {
+        Path path = Path.of("data", Long.toString(guildId), sanitizePathName(campaignName), "character");
+        return path;
+    }
 
-        return characterDirectory.resolve(fileName + ".json");
+    private String sanitizePathName(String pathName) {
+        return pathName.trim().replace(' ', '-').toLowerCase(Locale.ROOT);
+    }
+
+    private Path characterFile(Path campaignDirectory, String characterName) {
+        return campaignDirectory.resolve(sanitizePathName(characterName) + ".json");
     }
 }
