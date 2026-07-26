@@ -42,8 +42,11 @@ public class Character {
 
     private Map<String, String> specialAbilities;
 
+    private Map<String, String> spells;
+
     public Character() {
         specialAbilities = new HashMap<>();
+        spells = new HashMap<>();
     }
 
     public String getName() {
@@ -190,6 +193,14 @@ public class Character {
         this.specialAbilities = specialAbilities;
     }
 
+    public Map<String, String> getSpells() {
+        return spells;
+    }
+
+    public void setSpells(Map<String, String> spells) {
+        this.spells = spells;
+    }
+
     @Override
     public String toString() {
         return """
@@ -214,6 +225,8 @@ public class Character {
         😄 CHA: %d
         
         ✨ **Special Abilities:** %s
+        
+        🪄 **Spells:** %s
         """
             .formatted(
                 name,
@@ -235,7 +248,10 @@ public class Character {
                 charisma,
                 specialAbilities == null || specialAbilities.isEmpty()
                     ? "None"
-                    : specialAbilities
+                    : specialAbilities,
+                spells == null || spells.isEmpty()
+                    ? "None"
+                    : spells
             );
     }
 

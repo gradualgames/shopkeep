@@ -49,12 +49,16 @@ public class ShopkeepCommands extends ListenerAdapter {
                         .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
                         .addOption(OptionType.INTEGER, "constitution", "constitution", false)
                         .addOption(OptionType.INTEGER, "charisma", "charisma", false),
-                    new SubcommandData("list-stats", "List character stats")
+                    new SubcommandData("sheet", "Show character sheet")
                         .addOption(OptionType.STRING, "name", "name"),
                     new SubcommandData("add-ability", "Add special ability to character")
                         .addOption(OptionType.STRING, "name", "Name of character to add ability to", true)
                         .addOption(OptionType.STRING, "type", "Ability type", true)
                         .addOption(OptionType.STRING, "description", "Ability description", true),
+                    new SubcommandData("add-spell", "Add spell to character")
+                        .addOption(OptionType.STRING, "name", "Name of character to add spell to", true)
+                        .addOption(OptionType.STRING, "type", "Spell type", true)
+                        .addOption(OptionType.STRING, "description", "Spell description", true),
                     new SubcommandData("update", "Updates a character stat.")
                         .addOption(OptionType.STRING, "name", "Character name", true)
                         .addOption(OptionType.STRING, "stat", "Stat name", true)
@@ -137,6 +141,19 @@ public class ShopkeepCommands extends ListenerAdapter {
                     }
                     event.reply("Done").queue();
                 }
+                case "add-spell" -> {
+                    String name = event.getOption("name").getAsString();
+                    String type = event.getOption("type").getAsString();
+                    String description = event.getOption("description").getAsString();
+                    try {
+                        Character character = characterStore.load(name);
+                        character.getSpells().putIfAbsent(type, description);
+                        characterStore.save(character);
+                    } catch (IOException e) {
+                        log.error("Failed to load character: " + name);
+                    }
+                    event.reply("Done").queue();
+                }
                 case "update" -> {
                     String name = event.getOption("name").getAsString();
                     String stat = event.getOption("stat").getAsString();
@@ -184,7 +201,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                     }
                     event.reply("Done").queue();
                 }
-                case "list-stats" -> {
+                case "sheet" -> {
                     String name = event.getOption("name").getAsString();
                     try {
                         Character character = characterStore.load(name);
