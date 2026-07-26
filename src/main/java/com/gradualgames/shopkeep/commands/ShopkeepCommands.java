@@ -28,147 +28,32 @@ public class ShopkeepCommands extends ListenerAdapter {
             Commands.slash("character", "Character commands")
                 .addSubcommands(
                     new SubcommandData("create", "Create a character")
-                        .addOption(
-                            OptionType.STRING,
-                            "name",
-                            "name",
-                            true
-                        )
-                        .addOption(
-                            OptionType.STRING,
-                            "race",
-                            "race",
-                            true
-                        )
-                        .addOption(
-                            OptionType.STRING,
-                            "class",
-                            "class",
-                            true
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "level",
-                            "level",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "gp",
-                            "gold",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "xp",
-                            "experience",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "hp",
-                            "hit points",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "maxhp",
-                            "max hit points",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "ac",
-                            "armor class",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "atk",
-                            "attack bonus",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "mvt",
-                            "movement",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "strength",
-                            "strength",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "intelligence",
-                            "intelligence",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "wisdom",
-                            "wisdom",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "dexterity",
-                            "dexterity",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "constitution",
-                            "constitution",
-                            false
-                        )
-                        .addOption(
-                            OptionType.INTEGER,
-                            "charisma",
-                            "charisma",
-                            false
-                        ),
+                        .addOption(OptionType.STRING, "name", "name", true)
+                        .addOption(OptionType.STRING, "race", "race", true)
+                        .addOption(OptionType.STRING, "class", "class", true)
+                        .addOption(OptionType.INTEGER, "level", "level", false)
+                        .addOption(OptionType.INTEGER, "gp", "gold", false)
+                        .addOption(OptionType.INTEGER, "xp", "experience", false)
+                        .addOption(OptionType.INTEGER, "hp", "hit points", false)
+                        .addOption(OptionType.INTEGER, "maxhp", "max hit points", false)
+                        .addOption(OptionType.INTEGER, "ac", "armor class", false)
+                        .addOption(OptionType.INTEGER, "atk", "attack bonus", false)
+                        .addOption(OptionType.INTEGER, "mvt", "movement", false)
+                        .addOption(OptionType.INTEGER, "strength", "strength", false)
+                        .addOption(OptionType.INTEGER, "intelligence", "intelligence", false)
+                        .addOption(OptionType.INTEGER, "wisdom", "wisdom", false)
+                        .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
+                        .addOption(OptionType.INTEGER, "constitution", "constitution", false)
+                        .addOption(OptionType.INTEGER, "charisma", "charisma", false),
                     new SubcommandData("list", "List characters"),
                     new SubcommandData("add-ability", "Add special ability to character")
-                        .addOption(
-                            OptionType.STRING,
-                            "name",
-                            "Name of character to add ability to",
-                            true
-                        )
-                        .addOption(
-                            OptionType.STRING,
-                            "type",
-                            "Ability type",
-                            true
-                        )
-                        .addOption(
-                            OptionType.STRING,
-                            "description",
-                            "Ability description",
-                            true
-                        ),
+                        .addOption(OptionType.STRING, "name", "Name of character to add ability to", true)
+                        .addOption(OptionType.STRING, "type", "Ability type", true)
+                        .addOption(OptionType.STRING, "description", "Ability description", true),
                     new SubcommandData("update", "Updates a character stat.")
-                        .addOption(
-                            OptionType.STRING,
-                            "name",
-                            "Character name",
-                            true
-                        )
-                        .addOption(
-                            OptionType.STRING,
-                            "stat",
-                            "Stat name",
-                            true
-                        )
-                        .addOption(
-                            OptionType.STRING,
-                            "value",
-                            "Stat value",
-                            true
-                        )
+                        .addOption(OptionType.STRING, "name", "Character name", true)
+                        .addOption(OptionType.STRING, "stat", "Stat name", true)
+                        .addOption(OptionType.STRING, "value", "Stat value", true)
                 )
         ).queue();
     }
