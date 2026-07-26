@@ -2,6 +2,7 @@ package com.gradualgames.shopkeep.commands;
 
 import com.gradualgames.shopkeep.character.Character;
 import com.gradualgames.shopkeep.character.CharacterStore;
+import com.gradualgames.shopkeep.character.PlayerStore;
 import com.gradualgames.shopkeep.character.Weapon;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -22,8 +23,11 @@ public class ShopkeepCommands extends ListenerAdapter {
 
     private CharacterStore characterStore;
 
+    private PlayerStore playerStore;
+
     public ShopkeepCommands() throws IOException {
         characterStore = new CharacterStore();
+        playerStore = new PlayerStore();
     }
 
     public void registerCommands(Guild guild) {
@@ -48,6 +52,12 @@ public class ShopkeepCommands extends ListenerAdapter {
                 .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
                 .addOption(OptionType.INTEGER, "constitution", "constitution", false)
                 .addOption(OptionType.INTEGER, "charisma", "charisma", false)
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("play", "Play a character in a given campaign.")
+                .addOption(OptionType.STRING, "character-name", "Character name", true)
+                .addOption(OptionType.STRING, "campaign-name", "Campaign name", true)
         ).queue();
 
         guild.upsertCommand(
@@ -105,6 +115,7 @@ public class ShopkeepCommands extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         long guildId = event.getGuild().getIdLong();
+        long userId = event.getUser().getIdLong();
         String campaignName = "The Rumor of the Burnished Orb";
         String characterName = "Evangeline";
 
@@ -159,6 +170,17 @@ public class ShopkeepCommands extends ListenerAdapter {
                     log.error("Error, could not save character.");
                 }
                 event.reply("Done").queue();
+            }
+            case "play" -> {
+                String character = event.getOption("character-name").getAsString();
+                String campaign = event.getOption("campaign-name").getAsString();
+
+                try {
+                    playerStore.save(guildId, campaign, userId, character);
+                } catch (IOException e) {
+                    log.error("Could not play character.");
+                }
+                event.reply("Done.").queue();
             }
             case "update" -> {
                 String stat = event.getOption("stat").getAsString();

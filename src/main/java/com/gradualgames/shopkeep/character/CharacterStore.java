@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 
-public class CharacterStore {
+public class CharacterStore extends Store {
 
     private final ObjectMapper mapper =
         new ObjectMapper()
@@ -37,15 +37,6 @@ public class CharacterStore {
             characterFile(path, characterName).toFile(),
             Character.class
         );
-    }
-
-    private Path getCampaignDirectory(long guildId, String campaignName) {
-        Path path = Path.of("data", Long.toString(guildId), sanitizePathName(campaignName), "character");
-        return path;
-    }
-
-    private String sanitizePathName(String pathName) {
-        return pathName.trim().replace(' ', '-').toLowerCase(Locale.ROOT);
     }
 
     private Path characterFile(Path campaignDirectory, String characterName) {
