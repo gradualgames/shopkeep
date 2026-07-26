@@ -5,7 +5,7 @@ import java.util.Locale;
 
 public abstract class Store {
     protected Path getCampaignDirectory(long guildId, String campaignName) {
-        Path path = Path.of("data", Long.toString(guildId), sanitizePathName(campaignName), "character");
+        Path path = Path.of("data", Long.toString(guildId), sanitizePathName(campaignName));
         return path;
     }
 

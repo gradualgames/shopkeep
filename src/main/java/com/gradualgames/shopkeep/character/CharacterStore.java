@@ -11,6 +11,8 @@ import java.util.Locale;
 
 public class CharacterStore extends Store {
 
+    private static final String CHARACTER_PATH = "character";
+
     private final ObjectMapper mapper =
         new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)
@@ -23,18 +25,18 @@ public class CharacterStore extends Store {
     }
 
     public void save(long guildId, String campaignName, Character character) throws IOException {
-        Path path = getCampaignDirectory(guildId, campaignName);
-        Files.createDirectories(path);
+        Path characterPath = getCampaignDirectory(guildId, campaignName).resolve(CHARACTER_PATH);
+        Files.createDirectories(characterPath);
         mapper.writeValue(
-            characterFile(path, character.getName()).toFile(),
+            characterFile(characterPath, character.getName()).toFile(),
             character
         );
     }
 
     public Character load(long guildId, String campaignName, String characterName) throws IOException {
-        Path path = getCampaignDirectory(guildId, campaignName);
+        Path characterPath = getCampaignDirectory(guildId, campaignName).resolve(CHARACTER_PATH);
         return mapper.readValue(
-            characterFile(path, characterName).toFile(),
+            characterFile(characterPath, characterName).toFile(),
             Character.class
         );
     }
