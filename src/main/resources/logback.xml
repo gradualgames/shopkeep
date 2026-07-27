@@ -10,7 +10,7 @@
                 class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 
             <fileNamePattern>
-                logs/shopkeep.%d{yyyy-MM-dd}.%i.log
+                ${DATA_DIR}/logs/shopkeep.%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
 
             <maxFileSize>5MB</maxFileSize>
