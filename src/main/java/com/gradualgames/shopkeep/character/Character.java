@@ -3,6 +3,7 @@ package com.gradualgames.shopkeep.character;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Character {
 
@@ -257,15 +258,20 @@ public class Character {
         🫀 CON: %d
         😄 CHA: %d
         
-        ✨ **Special Abilities:** %s
+        ✨ **Special Abilities:**
+        %s
         
-        🪄 **Spells:** %s
+        🪄 **Spells:**
+        %s
         
-        🛡️ **Saving Throws:** %s
+        🛡️ **Saving Throws:**
+        %s
         
-        🎒 **Equipment:** %s
+        🎒 **Equipment:**
+        %s
         
-        ⚔️ **Weapons:** %s
+        ⚔️ **Weapons:**
+        %s
         """
             .formatted(
                 name,
@@ -285,22 +291,57 @@ public class Character {
                 dexterity,
                 constitution,
                 charisma,
-                specialAbilities == null || specialAbilities.isEmpty()
-                    ? "None"
-                    : specialAbilities,
-                spells == null || spells.isEmpty()
-                    ? "None"
-                    : spells,
-                savingThrows == null || savingThrows.isEmpty()
-                    ? "None"
-                    : savingThrows,
-                equipment == null || equipment.isEmpty()
-                    ? "None"
-                    : equipment,
-                weapons == null || weapons.isEmpty()
-                    ? "None"
-                    : weapons
+                formatMap(specialAbilities),
+                formatMap(spells),
+                formatMap(savingThrows),
+                formatMap(equipment),
+                formatWeapons(weapons)
             );
+    }
+
+    private static String formatMap(Map<String, ?> map) {
+        if (map == null || map.isEmpty()) {
+            return "None";
+        }
+
+        return map.entrySet().stream()
+            .map(entry -> "• " + entry.getKey() + ": " + entry.getValue())
+            .collect(Collectors.joining("\n"));
+    }
+
+    private static String formatWeapons(Map<String, Weapon> weapons) {
+        if (weapons == null || weapons.isEmpty()) {
+            return "None";
+        }
+
+        return weapons.entrySet().stream()
+            .map(entry -> {
+                Weapon weapon = entry.getValue();
+
+                StringBuilder builder = new StringBuilder()
+                    .append("• ")
+                    .append(entry.getKey())
+                    .append(" (")
+                    .append(weapon.damage());
+
+                if (weapon.range() != null) {
+                    builder.append(", ").append(weapon.range());
+                }
+
+                if (weapon.rshort() != null) {
+                    builder.append(", ")
+                        .append(weapon.rshort())
+                        .append("/")
+                        .append(weapon.rmedium())
+                        .append("/")
+                        .append(weapon.rlong());
+                }
+
+                builder.append(")");
+
+                return builder.toString();
+            })
+            .collect(Collectors.joining("\n"));
     }
 
     public static Builder builder() {
