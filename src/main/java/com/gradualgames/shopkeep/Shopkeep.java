@@ -12,7 +12,8 @@ public class Shopkeep {
     public static void main(String[] args) throws InterruptedException, IOException {
         String token = System.getenv("DISCORD_TOKEN");
         String serverId = System.getenv("SERVER_ID");
-        ShopkeepCommands shopkeepCommands = new ShopkeepCommands();
+        String dataDir = System.getenv("DATA_DIR");
+        ShopkeepCommands shopkeepCommands = new ShopkeepCommands(dataDir);
         JDA jda = JDABuilder.createDefault(token)
             .addEventListeners(shopkeepCommands)
             .build();

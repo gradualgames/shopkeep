@@ -23,6 +23,10 @@ public class PlayerStore extends Store {
                 false
             );
 
+    public PlayerStore(String dataDir) {
+        super(dataDir);
+    }
+
     public void save(long guildId, String campaignName, long userId, String characterName) throws IOException, IOException {
         Path campaignDirectory =
             getCampaignDirectory(guildId, campaignName);

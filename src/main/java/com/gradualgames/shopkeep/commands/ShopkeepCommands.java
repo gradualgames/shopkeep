@@ -24,9 +24,9 @@ public class ShopkeepCommands extends ListenerAdapter {
 
     private PlayerStore playerStore;
 
-    public ShopkeepCommands() throws IOException {
-        characterStore = new CharacterStore();
-        playerStore = new PlayerStore();
+    public ShopkeepCommands(String dataDir) throws IOException {
+        characterStore = new CharacterStore(dataDir);
+        playerStore = new PlayerStore(dataDir);
     }
 
     public void registerCommands(Guild guild) {

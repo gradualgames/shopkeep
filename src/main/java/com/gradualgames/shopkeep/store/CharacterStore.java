@@ -21,7 +21,8 @@ public class CharacterStore extends Store {
                 false
             );
 
-    public CharacterStore() {
+    public CharacterStore(String dataDir) {
+        super(dataDir);
     }
 
     public void save(long guildId, String campaignName, com.gradualgames.shopkeep.character.Character character) throws IOException {
