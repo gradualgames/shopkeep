@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class ShopkeepCommands extends ListenerAdapter {
 
@@ -23,6 +24,14 @@ public class ShopkeepCommands extends ListenerAdapter {
     private CharacterStore characterStore;
 
     private PlayerStore playerStore;
+
+    private static final Random RANDOM = new Random();
+
+    private static final String[] morshuQuotes = {
+        "Lamp oil? Rope? Bombs? You want it? It's yours, my friend, as long as you have enough slash commands!",
+        "Sorry, Link. I can't give credit! Come back when you're a little... mmmm... richer!",
+        "MMMMMMMMMMMMMMMMMMMMMMMMMM"
+    };
 
     public ShopkeepCommands(String dataDir) throws IOException {
         characterStore = new CharacterStore(dataDir);
@@ -149,7 +158,7 @@ public class ShopkeepCommands extends ListenerAdapter {
 
         if (event.getName().equals("hello")) {
             log.info("hello command received.");
-            event.reply("Lamp oil. Rope? Bombs? You want it? It's yours, my friend. As long as you have enough slash commands.").queue();
+            event.reply(morshuQuotes[RANDOM.nextInt(morshuQuotes.length)]).queue();
         }
         switch (event.getName()) {
             case "create" -> {
