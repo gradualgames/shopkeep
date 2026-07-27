@@ -206,7 +206,7 @@ public class ShopkeepCommands extends ListenerAdapter {
             }
             case "update" -> {
                 if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
+                    event.reply("User has not claimed a character in this campaign. Use /play first.").setEphemeral(true).queue();
                     log.warn(
                         "User {} attempted /{} without claiming a character.",
                         userId,
