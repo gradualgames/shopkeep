@@ -213,16 +213,35 @@ public class ShopkeepCommands extends ListenerAdapter {
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
-            case "update" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").setEphemeral(true).queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
+            case "play" -> {
+                String playCharacterName = event.getOption("character-name").getAsString();
+
+                try {
+                    playerStore.save(guildId, campaignName, userId, playCharacterName);
+                    log.info(
+                        "User {} is now playing '{}'.",
                         userId,
-                        event.getName()
+                        playCharacterName
                     );
-                    return;
+                } catch (IOException e) {
+                    log.error("Could not play character '{}'.", playCharacterName, e);
                 }
+                event.reply("Done.").setEphemeral(true).queue();
+            }
+        }
+
+        if (characterName == null) {
+            event.reply("User has not claimed a character in this campaign. Use /play first.").setEphemeral(true).queue();
+            log.warn(
+                "User {} attempted /{} without claiming a character.",
+                userId,
+                event.getName()
+            );
+            return;
+        }
+
+        switch (event.getName()) {
+            case "update" -> {
                 String race = event.getOption("race", null, OptionMapping::getAsString);
                 String charClass = event.getOption("class", null, OptionMapping::getAsString);
                 Integer level = event.getOption("level", null, OptionMapping::getAsInt);
@@ -273,31 +292,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
-            case "play" -> {
-                String playCharacterName = event.getOption("character-name").getAsString();
-
-                try {
-                    playerStore.save(guildId, campaignName, userId, playCharacterName);
-                    log.info(
-                        "User {} is now playing '{}'.",
-                        userId,
-                        playCharacterName
-                    );
-                } catch (IOException e) {
-                    log.error("Could not play character '{}'.", playCharacterName, e);
-                }
-                event.reply("Done.").setEphemeral(true).queue();
-            }
             case "add-ability" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
                 String type = event.getOption("type").getAsString();
                 String description = event.getOption("description").getAsString();
                 try {
@@ -311,15 +306,6 @@ public class ShopkeepCommands extends ListenerAdapter {
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-spell" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
                 String type = event.getOption("type").getAsString();
                 String description = event.getOption("description").getAsString();
                 try {
@@ -333,15 +319,6 @@ public class ShopkeepCommands extends ListenerAdapter {
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-saving-throw" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
                 String type = event.getOption("type").getAsString();
                 Integer value = event.getOption("value").getAsInt();
                 Character character = null;
@@ -356,15 +333,6 @@ public class ShopkeepCommands extends ListenerAdapter {
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-equipment" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
                 String type = event.getOption("type").getAsString();
                 Integer quantity = event.getOption("quantity").getAsInt();
                 Character character = null;
@@ -384,15 +352,6 @@ public class ShopkeepCommands extends ListenerAdapter {
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "add-weapon" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
                 String type = event.getOption("type").getAsString();
                 String damage = event.getOption("damage").getAsString();
                 String range = event.getOption("range").getAsString();
@@ -411,15 +370,6 @@ public class ShopkeepCommands extends ListenerAdapter {
                 event.reply("Done").setEphemeral(true).queue();
             }
             case "sheet" -> {
-                if (characterName == null) {
-                    event.reply("User has not claimed a character in this campaign. Use /play first.").queue();
-                    log.warn(
-                        "User {} attempted /{} without claiming a character.",
-                        userId,
-                        event.getName()
-                    );
-                    return;
-                }
                 try {
                     Character character = characterStore.load(guildId, campaignName, characterName);
                     log.info("Displayed character sheet for '{}'.", characterName);
