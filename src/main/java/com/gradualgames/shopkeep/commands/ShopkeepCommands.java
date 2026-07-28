@@ -1,6 +1,7 @@
 package com.gradualgames.shopkeep.commands;
 
 import com.gradualgames.shopkeep.character.Character;
+import com.gradualgames.shopkeep.character.FormatUtility;
 import com.gradualgames.shopkeep.store.CharacterStore;
 import com.gradualgames.shopkeep.store.PlayerStore;
 import com.gradualgames.shopkeep.character.Weapon;
@@ -124,6 +125,30 @@ public class ShopkeepCommands extends ListenerAdapter {
                 .addOption(OptionType.INTEGER, "short", "Short range bonus/penalty", false)
                 .addOption(OptionType.INTEGER, "medium", "Medium range bonus/penalty", false)
                 .addOption(OptionType.INTEGER, "long", "Long range bonus/penalty", false)
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("health", "View health and AC")
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("saving-throws", "View saving throws")
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("abilities", "View abilities")
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("spells", "View spells")
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("equipment", "View equipment")
+        ).queue();
+
+        guild.upsertCommand(
+            Commands.slash("weapons", "View weapons")
         ).queue();
     }
 
@@ -376,6 +401,84 @@ public class ShopkeepCommands extends ListenerAdapter {
                     Character character = characterStore.load(guildId, campaignName, characterName);
                     log.info("Displayed character sheet for '{}'.", characterName);
                     event.reply(character.toString()).setEphemeral(true).queue();;
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "health" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String health = """
+                        ❤️ **HP:** %d/%d
+                        🛡️ **AC:** %d                        
+                        """.formatted(character.getHp(), character.getMaxHp(), character.getAc());
+                    log.info("Displayed health for '{}'.", characterName);
+                    event.reply(health).setEphemeral(true).queue();;
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "saving-throws" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String savingThrows = """
+                        🛡️ **Saving Throws:**
+                        %s                        
+                        """.formatted(FormatUtility.formatMap(character.getSavingThrows()));
+                    log.info("Displayed saving throws for '{}'.", characterName);
+                    event.reply(savingThrows).setEphemeral(true).queue();;
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "abilities" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String abilities = """
+                        ✨ **Special Abilities:**
+                        %s
+                        """.formatted(FormatUtility.formatMap(character.getSpecialAbilities()));
+                    log.info("Displayed abilities for '{}'.", characterName);
+                    event.reply(abilities).setEphemeral(true).queue();;
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "spells" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String spells = """
+                        🪄 **Spells:**
+                        %s                        
+                        """.formatted(FormatUtility.formatMap(character.getSpells()));
+                    log.info("Displayed spells for '{}'.", characterName);
+                    event.reply(spells).setEphemeral(true).queue();;
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "equipment" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String equipment = """
+                        🎒 **Equipment:**
+                        %s
+                        """.formatted(FormatUtility.formatMap(character.getEquipment()));
+                    log.info("Displayed equipment for '{}'.", characterName);
+                    event.reply(equipment).setEphemeral(true).queue();;
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "weapons" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String weapons = """
+                        ⚔️ **Weapons:**
+                        %s
+                        """.formatted(FormatUtility.formatWeapons(character.getWeapons()));
+                    log.info("Displayed weapons for '{}'.", characterName);
+                    event.reply(weapons).setEphemeral(true).queue();;
                 } catch (IOException e) {
                     log.error("Could not load character '{}'", characterName, e);
                 }
