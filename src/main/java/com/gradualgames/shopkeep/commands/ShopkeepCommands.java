@@ -212,6 +212,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                     log.error("Could not save character '{}'.", name, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
+                return;
             }
             case "play" -> {
                 String playCharacterName = event.getOption("character-name").getAsString();
@@ -227,6 +228,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                     log.error("Could not play character '{}'.", playCharacterName, e);
                 }
                 event.reply("Done.").setEphemeral(true).queue();
+                return;
             }
         }
 
