@@ -93,13 +93,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                 Commands.slash("sheet", "Show character sheet"),
 
                 Commands.slash("add-ability", "Add special ability to character")
-                    .addOption(OptionType.STRING, "type", "Ability type", true)
-                    .addOption(
-                        OptionType.STRING,
-                        "description",
-                        "Ability description",
-                        true
-                    ),
+                    .addOption(OptionType.STRING, "type", "Ability type", true),
 
                 Commands.slash("add-spell", "Add spell to character")
                     .addOption(OptionType.STRING, "type", "Spell type", true)
@@ -356,10 +350,9 @@ public class ShopkeepCommands extends ListenerAdapter {
             }
             case "add-ability" -> {
                 String type = event.getOption("type").getAsString();
-                String description = event.getOption("description").getAsString();
                 try {
                     Character character = characterStore.load(guildId, campaignName, characterName);
-                    character.getSpecialAbilities().putIfAbsent(type, description);
+                    character.getSpecialAbilities().add(type);
                     characterStore.save(guildId, campaignName, character);
                     log.info("Added ability '{}' to '{}'.", type, characterName);
                 } catch (IOException e) {
@@ -502,7 +495,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                     String abilities = """
                         ✨ **Special Abilities:**
                         %s
-                        """.formatted(FormatUtility.formatMap(character.getSpecialAbilities()));
+                        """.formatted(FormatUtility.formatSet(character.getSpecialAbilities()));
                     log.info("Displayed abilities for '{}'.", characterName);
                     event.reply(abilities).setEphemeral(true).queue();;
                 } catch (IOException e) {

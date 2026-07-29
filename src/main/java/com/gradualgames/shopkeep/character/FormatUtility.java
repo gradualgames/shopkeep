@@ -1,6 +1,7 @@
 package com.gradualgames.shopkeep.character;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -12,6 +13,16 @@ public class FormatUtility {
 
         return map.entrySet().stream()
             .map(entry -> "• " + entry.getKey() + ": " + entry.getValue())
+            .collect(Collectors.joining("\n"));
+    }
+
+    public static String formatSet(Set<String> set) {
+        if (set == null || set.isEmpty()) {
+            return "None";
+        }
+
+        return set.stream()
+            .map(entry -> "• " + entry)
             .collect(Collectors.joining("\n"));
     }
 
