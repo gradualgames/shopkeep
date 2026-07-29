@@ -298,55 +298,137 @@ public class ShopkeepCommands extends ListenerAdapter {
 
         switch (event.getName()) {
             case "update" -> {
-                String race = event.getOption("race", null, OptionMapping::getAsString);
-                String charClass = event.getOption("class", null, OptionMapping::getAsString);
-                Integer level = event.getOption("level", null, OptionMapping::getAsInt);
-                Integer gp = event.getOption("gp", null, OptionMapping::getAsInt);
-                Integer xp = event.getOption("xp", null, OptionMapping::getAsInt);
-                Integer hp = event.getOption("hp", null, OptionMapping::getAsInt);
-                Integer maxHp = event.getOption("maxhp", null, OptionMapping::getAsInt);
-                Integer ac = event.getOption("ac", null, OptionMapping::getAsInt);
-                Integer atk = event.getOption("atk", null, OptionMapping::getAsInt);
-                Integer mvt = event.getOption("mvt", null, OptionMapping::getAsInt);
-                Integer strength = event.getOption("strength", null, OptionMapping::getAsInt);
-                Integer intelligence = event.getOption("intelligence", null, OptionMapping::getAsInt);
-                Integer wisdom = event.getOption("wisdom", null, OptionMapping::getAsInt);
-                Integer dexterity = event.getOption("dexterity", null, OptionMapping::getAsInt);
-                Integer constitution = event.getOption("constitution", null, OptionMapping::getAsInt);
-                Integer charisma = event.getOption("charisma", null, OptionMapping::getAsInt);
-
-                Character.Builder builder = new Character.Builder();
-                Character character =
-                    builder.name(characterName)
-                        .race(race)
-                        .charClass(charClass)
-                        .level(level)
-                        .gp(gp)
-                        .xp(xp)
-                        .hp(hp)
-                        .maxHp(maxHp)
-                        .ac(ac)
-                        .atk(atk)
-                        .mvt(mvt)
-                        .strength(strength)
-                        .intelligence(intelligence)
-                        .wisdom(wisdom)
-                        .dexterity(dexterity)
-                        .constitution(constitution)
-                        .charisma(charisma)
-                        .build();
-
                 try {
+                    Character character =
+                        characterStore.load(guildId, campaignName, characterName);
+
+                    if (character == null) {
+                        event.reply("Character not found.")
+                            .setEphemeral(true)
+                            .queue();
+                        break;
+                    }
+
+                    String race =
+                        event.getOption("race", null, OptionMapping::getAsString);
+                    String charClass =
+                        event.getOption("class", null, OptionMapping::getAsString);
+                    Integer level =
+                        event.getOption("level", null, OptionMapping::getAsInt);
+                    Integer gp =
+                        event.getOption("gp", null, OptionMapping::getAsInt);
+                    Integer xp =
+                        event.getOption("xp", null, OptionMapping::getAsInt);
+                    Integer hp =
+                        event.getOption("hp", null, OptionMapping::getAsInt);
+                    Integer maxHp =
+                        event.getOption("maxhp", null, OptionMapping::getAsInt);
+                    Integer ac =
+                        event.getOption("ac", null, OptionMapping::getAsInt);
+                    Integer atk =
+                        event.getOption("atk", null, OptionMapping::getAsInt);
+                    Integer mvt =
+                        event.getOption("mvt", null, OptionMapping::getAsInt);
+                    Integer strength =
+                        event.getOption("strength", null, OptionMapping::getAsInt);
+                    Integer intelligence =
+                        event.getOption("intelligence", null, OptionMapping::getAsInt);
+                    Integer wisdom =
+                        event.getOption("wisdom", null, OptionMapping::getAsInt);
+                    Integer dexterity =
+                        event.getOption("dexterity", null, OptionMapping::getAsInt);
+                    Integer constitution =
+                        event.getOption("constitution", null, OptionMapping::getAsInt);
+                    Integer charisma =
+                        event.getOption("charisma", null, OptionMapping::getAsInt);
+
+                    if (race != null) {
+                        character.setRace(race);
+                    }
+
+                    if (charClass != null) {
+                        character.setCharClass(charClass);
+                    }
+
+                    if (level != null) {
+                        character.setLevel(level);
+                    }
+
+                    if (gp != null) {
+                        character.setGp(gp);
+                    }
+
+                    if (xp != null) {
+                        character.setXp(xp);
+                    }
+
+                    if (hp != null) {
+                        character.setHp(hp);
+                    }
+
+                    if (maxHp != null) {
+                        character.setMaxHp(maxHp);
+                    }
+
+                    if (ac != null) {
+                        character.setAc(ac);
+                    }
+
+                    if (atk != null) {
+                        character.setAtk(atk);
+                    }
+
+                    if (mvt != null) {
+                        character.setMvt(mvt);
+                    }
+
+                    if (strength != null) {
+                        character.setStrength(strength);
+                    }
+
+                    if (intelligence != null) {
+                        character.setIntelligence(intelligence);
+                    }
+
+                    if (wisdom != null) {
+                        character.setWisdom(wisdom);
+                    }
+
+                    if (dexterity != null) {
+                        character.setDexterity(dexterity);
+                    }
+
+                    if (constitution != null) {
+                        character.setConstitution(constitution);
+                    }
+
+                    if (charisma != null) {
+                        character.setCharisma(charisma);
+                    }
+
                     characterStore.save(guildId, campaignName, character);
+
                     log.info(
                         "Updated character '{}' in campaign '{}'.",
                         characterName,
                         campaignName
                     );
+
+                    event.reply("Done")
+                        .setEphemeral(true)
+                        .queue();
+
                 } catch (IOException e) {
-                    log.error("Could not save character '{}'.", characterName, e);
+                    log.error(
+                        "Could not update character '{}'.",
+                        characterName,
+                        e
+                    );
+
+                    event.reply("Could not update character.")
+                        .setEphemeral(true)
+                        .queue();
                 }
-                event.reply("Done").setEphemeral(true).queue();
             }
             case "add-ability" -> {
                 String type = event.getOption("type").getAsString();
