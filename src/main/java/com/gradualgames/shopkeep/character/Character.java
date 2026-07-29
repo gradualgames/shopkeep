@@ -3,8 +3,7 @@ package com.gradualgames.shopkeep.character;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.gradualgames.shopkeep.character.FormatUtility.formatMap;
-import static com.gradualgames.shopkeep.character.FormatUtility.formatWeapons;
+import static com.gradualgames.shopkeep.character.FormatUtility.*;
 
 public class Character {
 
@@ -44,7 +43,7 @@ public class Character {
 
     private Map<String, String> specialAbilities;
 
-    private Map<String, String> spells;
+    private Map<String, Spell> spells;
 
     private Map<String, Integer> savingThrows;
 
@@ -204,11 +203,11 @@ public class Character {
         this.specialAbilities = specialAbilities;
     }
 
-    public Map<String, String> getSpells() {
+    public Map<String, Spell> getSpells() {
         return spells;
     }
 
-    public void setSpells(Map<String, String> spells) {
+    public void setSpells(Map<String, Spell> spells) {
         this.spells = spells;
     }
 
@@ -293,7 +292,7 @@ public class Character {
                 constitution,
                 charisma,
                 formatMap(specialAbilities),
-                formatMap(spells),
+                formatSpells(spells),
                 formatMap(savingThrows),
                 formatMap(equipment),
                 formatWeapons(weapons)

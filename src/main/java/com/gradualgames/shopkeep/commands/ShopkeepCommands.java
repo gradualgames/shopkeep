@@ -2,6 +2,7 @@ package com.gradualgames.shopkeep.commands;
 
 import com.gradualgames.shopkeep.character.Character;
 import com.gradualgames.shopkeep.character.FormatUtility;
+import com.gradualgames.shopkeep.character.Spell;
 import com.gradualgames.shopkeep.store.CharacterStore;
 import com.gradualgames.shopkeep.store.PlayerStore;
 import com.gradualgames.shopkeep.character.Weapon;
@@ -40,116 +41,150 @@ public class ShopkeepCommands extends ListenerAdapter {
     }
 
     public void registerCommands(Guild guild) {
-        guild.upsertCommand("hello", "Tell Shopkeep to say hello")
-            .queue();
+        guild.updateCommands()
+            .addCommands(
+                Commands.slash("hello", "Tell Shopkeep to say hello"),
 
-        guild.upsertCommand(
-            Commands.slash("create", "Create a character")
-                .addOption(OptionType.STRING, "name", "name", true)
-                .addOption(OptionType.STRING, "race", "race", true)
-                .addOption(OptionType.STRING, "class", "class", true)
-                .addOption(OptionType.INTEGER, "level", "level", false)
-                .addOption(OptionType.INTEGER, "gp", "gold", false)
-                .addOption(OptionType.INTEGER, "xp", "experience", false)
-                .addOption(OptionType.INTEGER, "hp", "hit points", false)
-                .addOption(OptionType.INTEGER, "maxhp", "max hit points", false)
-                .addOption(OptionType.INTEGER, "ac", "armor class", false)
-                .addOption(OptionType.INTEGER, "atk", "attack bonus", false)
-                .addOption(OptionType.INTEGER, "mvt", "movement", false)
-                .addOption(OptionType.INTEGER, "strength", "strength", false)
-                .addOption(OptionType.INTEGER, "intelligence", "intelligence", false)
-                .addOption(OptionType.INTEGER, "wisdom", "wisdom", false)
-                .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
-                .addOption(OptionType.INTEGER, "constitution", "constitution", false)
-                .addOption(OptionType.INTEGER, "charisma", "charisma", false)
-        ).queue();
+                Commands.slash("create", "Create a character")
+                    .addOption(OptionType.STRING, "name", "name", true)
+                    .addOption(OptionType.STRING, "race", "race", true)
+                    .addOption(OptionType.STRING, "class", "class", true)
+                    .addOption(OptionType.INTEGER, "level", "level", false)
+                    .addOption(OptionType.INTEGER, "gp", "gold", false)
+                    .addOption(OptionType.INTEGER, "xp", "experience", false)
+                    .addOption(OptionType.INTEGER, "hp", "hit points", false)
+                    .addOption(OptionType.INTEGER, "maxhp", "max hit points", false)
+                    .addOption(OptionType.INTEGER, "ac", "armor class", false)
+                    .addOption(OptionType.INTEGER, "atk", "attack bonus", false)
+                    .addOption(OptionType.INTEGER, "mvt", "movement", false)
+                    .addOption(OptionType.INTEGER, "strength", "strength", false)
+                    .addOption(OptionType.INTEGER, "intelligence", "intelligence", false)
+                    .addOption(OptionType.INTEGER, "wisdom", "wisdom", false)
+                    .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
+                    .addOption(OptionType.INTEGER, "constitution", "constitution", false)
+                    .addOption(OptionType.INTEGER, "charisma", "charisma", false),
 
-        guild.upsertCommand(
-            Commands.slash("update", "Update a character")
-                .addOption(OptionType.STRING, "race", "race", false)
-                .addOption(OptionType.STRING, "class", "class", false)
-                .addOption(OptionType.INTEGER, "level", "level", false)
-                .addOption(OptionType.INTEGER, "gp", "gold", false)
-                .addOption(OptionType.INTEGER, "xp", "experience", false)
-                .addOption(OptionType.INTEGER, "hp", "hit points", false)
-                .addOption(OptionType.INTEGER, "maxhp", "max hit points", false)
-                .addOption(OptionType.INTEGER, "ac", "armor class", false)
-                .addOption(OptionType.INTEGER, "atk", "attack bonus", false)
-                .addOption(OptionType.INTEGER, "mvt", "movement", false)
-                .addOption(OptionType.INTEGER, "strength", "strength", false)
-                .addOption(OptionType.INTEGER, "intelligence", "intelligence", false)
-                .addOption(OptionType.INTEGER, "wisdom", "wisdom", false)
-                .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
-                .addOption(OptionType.INTEGER, "constitution", "constitution", false)
-                .addOption(OptionType.INTEGER, "charisma", "charisma", false)
-        ).queue();
+                Commands.slash("update", "Update a character")
+                    .addOption(OptionType.STRING, "race", "race", false)
+                    .addOption(OptionType.STRING, "class", "class", false)
+                    .addOption(OptionType.INTEGER, "level", "level", false)
+                    .addOption(OptionType.INTEGER, "gp", "gold", false)
+                    .addOption(OptionType.INTEGER, "xp", "experience", false)
+                    .addOption(OptionType.INTEGER, "hp", "hit points", false)
+                    .addOption(OptionType.INTEGER, "maxhp", "max hit points", false)
+                    .addOption(OptionType.INTEGER, "ac", "armor class", false)
+                    .addOption(OptionType.INTEGER, "atk", "attack bonus", false)
+                    .addOption(OptionType.INTEGER, "mvt", "movement", false)
+                    .addOption(OptionType.INTEGER, "strength", "strength", false)
+                    .addOption(OptionType.INTEGER, "intelligence", "intelligence", false)
+                    .addOption(OptionType.INTEGER, "wisdom", "wisdom", false)
+                    .addOption(OptionType.INTEGER, "dexterity", "dexterity", false)
+                    .addOption(OptionType.INTEGER, "constitution", "constitution", false)
+                    .addOption(OptionType.INTEGER, "charisma", "charisma", false),
 
-        guild.upsertCommand(
-            Commands.slash("play", "Play a character in a given campaign.")
-                .addOption(OptionType.STRING, "character-name", "Character name", true)
-        ).queue();
+                Commands.slash("play", "Play a character in a given campaign.")
+                    .addOption(
+                        OptionType.STRING,
+                        "character-name",
+                        "Character name",
+                        true
+                    ),
 
-        guild.upsertCommand(
-            Commands.slash("sheet", "Show character sheet")
-        ).queue();
+                Commands.slash("sheet", "Show character sheet"),
 
-        guild.upsertCommand(
-            Commands.slash("add-ability", "Add special ability to character")
-                .addOption(OptionType.STRING, "type", "Ability type", true)
-                .addOption(OptionType.STRING, "description", "Ability description", true)
-        ).queue();
+                Commands.slash("add-ability", "Add special ability to character")
+                    .addOption(OptionType.STRING, "type", "Ability type", true)
+                    .addOption(
+                        OptionType.STRING,
+                        "description",
+                        "Ability description",
+                        true
+                    ),
 
-        guild.upsertCommand(
-            Commands.slash("add-spell", "Add spell to character")
-                .addOption(OptionType.STRING, "type", "Spell type", true)
-                .addOption(OptionType.STRING, "description", "Spell description", true)
-        ).queue();
+                Commands.slash("add-spell", "Add spell to character")
+                    .addOption(OptionType.STRING, "type", "Spell type", true)
+                    .addOption(OptionType.INTEGER, "level", "Spell level", true),
 
-        guild.upsertCommand(
-            Commands.slash("add-saving-throw", "Add saving throw to character")
-                .addOption(OptionType.STRING, "type", "Saving throw type", true)
-                .addOption(OptionType.INTEGER, "value", "Saving throw value", true)
-        ).queue();
+                Commands.slash("prepare-spell", "Prepare a spell")
+                    .addOption(OptionType.STRING, "type", "Spell type", true),
 
-        guild.upsertCommand(
-            Commands.slash("add-equipment", "Add equipment to character")
-                .addOption(OptionType.STRING, "type", "Equipment type", true)
-                .addOption(OptionType.INTEGER, "quantity", "Equipment quantity", true)
-        ).queue();
+                Commands.slash("unprepare-spells", "Unprepare all spells"),
 
-        guild.upsertCommand(
-            Commands.slash("add-weapon", "Add weapon to character")
-                .addOption(OptionType.STRING, "type", "Weapon type", true)
-                .addOption(OptionType.STRING, "damage", "Weapon damage dice", true)
-                .addOption(OptionType.STRING, "range", "Weapon range type", true)
-                .addOption(OptionType.INTEGER, "short", "Short range bonus/penalty", false)
-                .addOption(OptionType.INTEGER, "medium", "Medium range bonus/penalty", false)
-                .addOption(OptionType.INTEGER, "long", "Long range bonus/penalty", false)
-        ).queue();
+                Commands.slash("add-saving-throw", "Add saving throw to character")
+                    .addOption(
+                        OptionType.STRING,
+                        "type",
+                        "Saving throw type",
+                        true
+                    )
+                    .addOption(
+                        OptionType.INTEGER,
+                        "value",
+                        "Saving throw value",
+                        true
+                    ),
 
-        guild.upsertCommand(
-            Commands.slash("health", "View health and AC")
-        ).queue();
+                Commands.slash("add-equipment", "Add equipment to character")
+                    .addOption(
+                        OptionType.STRING,
+                        "type",
+                        "Equipment type",
+                        true
+                    )
+                    .addOption(
+                        OptionType.INTEGER,
+                        "quantity",
+                        "Equipment quantity",
+                        true
+                    ),
 
-        guild.upsertCommand(
-            Commands.slash("saving-throws", "View saving throws")
-        ).queue();
+                Commands.slash("add-weapon", "Add weapon to character")
+                    .addOption(OptionType.STRING, "type", "Weapon type", true)
+                    .addOption(
+                        OptionType.STRING,
+                        "damage",
+                        "Weapon damage dice",
+                        true
+                    )
+                    .addOption(
+                        OptionType.STRING,
+                        "range",
+                        "Weapon range type",
+                        true
+                    )
+                    .addOption(
+                        OptionType.INTEGER,
+                        "short",
+                        "Short range bonus/penalty",
+                        false
+                    )
+                    .addOption(
+                        OptionType.INTEGER,
+                        "medium",
+                        "Medium range bonus/penalty",
+                        false
+                    )
+                    .addOption(
+                        OptionType.INTEGER,
+                        "long",
+                        "Long range bonus/penalty",
+                        false
+                    ),
 
-        guild.upsertCommand(
-            Commands.slash("abilities", "View abilities")
-        ).queue();
-
-        guild.upsertCommand(
-            Commands.slash("spells", "View spells")
-        ).queue();
-
-        guild.upsertCommand(
-            Commands.slash("equipment", "View equipment")
-        ).queue();
-
-        guild.upsertCommand(
-            Commands.slash("weapons", "View weapons")
-        ).queue();
+                Commands.slash("health", "View health and AC"),
+                Commands.slash("saving-throws", "View saving throws"),
+                Commands.slash("abilities", "View abilities"),
+                Commands.slash("spells", "View spells"),
+                Commands.slash("spell-slots", "View spell slots summary"),
+                Commands.slash("equipment", "View equipment"),
+                Commands.slash("weapons", "View weapons")
+            )
+            .queue(
+                commands -> System.out.println(
+                    "Registered " + commands.size() + " guild commands."
+                ),
+                Throwable::printStackTrace
+            );
     }
 
     @Override
@@ -334,14 +369,44 @@ public class ShopkeepCommands extends ListenerAdapter {
             }
             case "add-spell" -> {
                 String type = event.getOption("type").getAsString();
-                String description = event.getOption("description").getAsString();
+                Integer level = event.getOption("level").getAsInt();
                 try {
                     Character character = characterStore.load(guildId, campaignName, characterName);
-                    character.getSpells().putIfAbsent(type, description);
+                    Spell spell = new Spell(level, 0);
+                    character.getSpells().putIfAbsent(type, spell);
                     characterStore.save(guildId, campaignName, character);
                     log.info("Added spell '{}' to '{}'.", type, characterName);
                 } catch (IOException e) {
                     log.error("Failed to load character '{}'", characterName, e);
+                }
+                event.reply("Done").setEphemeral(true).queue();
+            }
+            case "prepare-spell" -> {
+                String type = event.getOption("type").getAsString();
+                Character character = null;
+                try {
+                    character = characterStore.load(guildId, campaignName, characterName);
+                    Spell spell = character.getSpells().get(type);
+                    if (spell != null) {
+                        spell.prepare();
+                    }
+                    character.getSpells().put(type, spell);
+                    characterStore.save(guildId, campaignName, character);
+                    log.info("Prepared spell '{}' for '{}'.", type, characterName);
+                } catch (IOException e) {
+                    log.error("Could not prepare spell for character '{}'", characterName, e);
+                }
+                event.reply("Done").setEphemeral(true).queue();
+            }
+            case "unprepare-spells" -> {
+                Character character = null;
+                try {
+                    character = characterStore.load(guildId, campaignName, characterName);
+                    character.getSpells().values().forEach(spell -> spell.setPrepared(0));
+                    characterStore.save(guildId, campaignName, character);
+                    log.info("Unprepared all spells for '{}'.", characterName);
+                } catch (IOException e) {
+                    log.error("Could not unprepare spells for character '{}'", characterName, e);
                 }
                 event.reply("Done").setEphemeral(true).queue();
             }
@@ -450,9 +515,22 @@ public class ShopkeepCommands extends ListenerAdapter {
                     String spells = """
                         🪄 **Spells:**
                         %s                        
-                        """.formatted(FormatUtility.formatMap(character.getSpells()));
+                        """.formatted(FormatUtility.formatSpells(character.getSpells()));
                     log.info("Displayed spells for '{}'.", characterName);
-                    event.reply(spells).setEphemeral(true).queue();;
+                    event.reply(spells).setEphemeral(true).queue();
+                } catch (IOException e) {
+                    log.error("Could not load character '{}'", characterName, e);
+                }
+            }
+            case "spell-slots" -> {
+                try {
+                    Character character = characterStore.load(guildId, campaignName, characterName);
+                    String spells = """
+                        🪄 **Spell Slots:**
+                        %s                        
+                        """.formatted(FormatUtility.formatSpellSlots(character.getSpells()));
+                    log.info("Displayed spell slots for '{}'.", characterName);
+                    event.reply(spells).setEphemeral(true).queue();
                 } catch (IOException e) {
                     log.error("Could not load character '{}'", characterName, e);
                 }
