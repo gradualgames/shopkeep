@@ -93,6 +93,17 @@ public class ShopkeepCommands extends ListenerAdapter {
                         true
                     ),
 
+                Commands.slash(
+                        "import",
+                        "Import a character JSON file"
+                    )
+                    .addOption(
+                        OptionType.ATTACHMENT,
+                        "file",
+                        "Character JSON file",
+                        true
+                    ),
+
                 Commands.slash("export", "Export a character JSON file")
                     .addOption(OptionType.STRING, "character-name", "Character name", true),
 
@@ -288,6 +299,45 @@ public class ShopkeepCommands extends ListenerAdapter {
                     log.error("Could not play character '{}'.", playCharacterName, e);
                 }
                 event.reply("Done.").setEphemeral(true).queue();
+                return;
+            }
+            case "import" -> {
+                var attachment = event.getOption("file").getAsAttachment();
+
+                if (!attachment.getFileName().toLowerCase().endsWith(".json")) {
+                    event.reply("Please upload a JSON file.")
+                        .setEphemeral(true)
+                        .queue();
+                    return;
+                }
+
+                event.deferReply(true).queue();
+
+                attachment.getProxy().download()
+                    .thenApply(inputStream -> {
+                        try (inputStream) {
+                            return characterStore.importCharacter(guildId, campaignName, inputStream);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .thenAccept(character -> {
+                        log.info("Imported character '{}'.", character.getName());
+
+                        event.getHook()
+                            .editOriginal("Imported character: **" + character.getName() + "**")
+                            .queue();
+                    })
+                    .exceptionally(e -> {
+                        log.error("Could not import character.", e);
+
+                        event.getHook()
+                            .editOriginal("Could not import character.")
+                            .queue();
+
+                        return null;
+                    });
+
                 return;
             }
             case "export" -> {

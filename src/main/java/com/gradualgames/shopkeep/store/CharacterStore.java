@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.gradualgames.shopkeep.character.Character;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -40,6 +41,28 @@ public class CharacterStore extends Store {
             characterFile(characterPath, characterName).toFile(),
             Character.class
         );
+    }
+
+    public Character importCharacter(
+        long guildId,
+        String campaignName,
+        InputStream inputStream
+    ) throws IOException {
+        Character character =
+            mapper.readValue(inputStream, Character.class);
+
+        if (
+            character.getName() == null ||
+                character.getName().isBlank()
+        ) {
+            throw new IOException(
+                "Imported character does not have a valid name."
+            );
+        }
+
+        save(guildId, campaignName, character);
+
+        return character;
     }
 
     public Path getCharacterFile(
