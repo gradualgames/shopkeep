@@ -2,7 +2,7 @@
 
 Shopkeep is a lightweight Discord bot for running old-school tabletop RPGs in play-by-post (PBP) campaigns.
 
-Rather than trying to automate every rule, Shopkeep focuses on one job: keeping character sheets organized and easy to update from Discord. Character data is stored as human-readable JSON files, making it simple to back up, edit by hand, or migrate between servers.
+Rather than trying to automate every rule, Shopkeep focuses on one job: keeping character sheets organized and easy to update from Discord. Character data is stored as human-readable JSON files, making it simple to back up, restore, edit by hand, or migrate between servers.
 
 The project is intentionally simple:
 
@@ -20,7 +20,8 @@ The project is intentionally simple:
 * Create characters
 * Update character statistics
 * Select ("play") a character for the current campaign
-* Export character JSON files for backup
+* Import character JSON files
+* Export character JSON files
 
 ### Character Information
 
@@ -107,6 +108,7 @@ export DATA_DIR=/data
 /create
 /update
 /play
+/import
 /export
 /sheet
 ```
@@ -141,4 +143,4 @@ Shopkeep is intentionally small.
 
 Instead of becoming a full virtual tabletop or implementing every rule of every RPG system, it provides a persistent character sheet that players and referees can update quickly during play.
 
-Using plain JSON files keeps the data easy to inspect, back up, edit manually, and migrate as the project evolves. The goal is to make bookkeeping easier without getting in the way of actually playing the game.
+Using plain JSON files keeps the data easy to inspect, back up, restore, edit manually, and migrate as the project evolves. The goal is to make bookkeeping easier without getting in the way of actually playing the game.
