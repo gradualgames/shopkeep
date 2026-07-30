@@ -286,19 +286,57 @@ public class ShopkeepCommands extends ListenerAdapter {
                 return;
             }
             case "play" -> {
-                String playCharacterName = event.getOption("character-name").getAsString();
+                String playCharacterName =
+                    event.getOption("character-name").getAsString();
+
+                Path characterFile =
+                    characterStore.getCharacterFile(
+                        guildId,
+                        campaignName,
+                        playCharacterName
+                    );
+
+                if (!Files.isRegularFile(characterFile)) {
+                    event.reply(
+                            "Character `" +
+                                playCharacterName +
+                                "` does not exist."
+                        )
+                        .setEphemeral(true)
+                        .queue();
+                    return;
+                }
 
                 try {
-                    playerStore.save(guildId, campaignName, userId, playCharacterName);
+                    playerStore.save(
+                        guildId,
+                        campaignName,
+                        userId,
+                        playCharacterName
+                    );
+
                     log.info(
                         "User {} is now playing '{}'.",
                         userId,
                         playCharacterName
                     );
                 } catch (IOException e) {
-                    log.error("Could not play character '{}'.", playCharacterName, e);
+                    log.error(
+                        "Could not play character '{}'.",
+                        playCharacterName,
+                        e
+                    );
+
+                    event.reply("Could not select character.")
+                        .setEphemeral(true)
+                        .queue();
+                    return;
                 }
-                event.reply("Done.").setEphemeral(true).queue();
+
+                event.reply("Done.")
+                    .setEphemeral(true)
+                    .queue();
+
                 return;
             }
             case "import" -> {
