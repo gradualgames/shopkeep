@@ -13,10 +13,13 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 
 public class ShopkeepCommands extends ListenerAdapter {
@@ -89,6 +92,9 @@ public class ShopkeepCommands extends ListenerAdapter {
                         "Character name",
                         true
                     ),
+
+                Commands.slash("export", "Export a character JSON file")
+                    .addOption(OptionType.STRING, "character-name", "Character name", true),
 
                 Commands.slash("sheet", "Show character sheet"),
 
@@ -282,6 +288,29 @@ public class ShopkeepCommands extends ListenerAdapter {
                     log.error("Could not play character '{}'.", playCharacterName, e);
                 }
                 event.reply("Done.").setEphemeral(true).queue();
+                return;
+            }
+            case "export" -> {
+                String exportCharacterName = event.getOption("character-name").getAsString();
+
+                Path characterFile =
+                    characterStore.getCharacterFile(
+                        guildId,
+                        campaignName,
+                        exportCharacterName
+                    );
+
+                if (!Files.isRegularFile(characterFile)) {
+                    event.reply("Character `" + characterName + "` does not exist.")
+                        .setEphemeral(true)
+                        .queue();
+                    return;
+                }
+
+                event.replyFiles(FileUpload.fromData(characterFile))
+                    .setContent("Exported character: **" + characterName + "**")
+                    .setEphemeral(true)
+                    .queue();
                 return;
             }
         }

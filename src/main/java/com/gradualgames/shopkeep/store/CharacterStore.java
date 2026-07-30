@@ -34,11 +34,23 @@ public class CharacterStore extends Store {
         );
     }
 
-    public com.gradualgames.shopkeep.character.Character load(long guildId, String campaignName, String characterName) throws IOException {
+    public Character load(long guildId, String campaignName, String characterName) throws IOException {
         Path characterPath = getCampaignDirectory(guildId, campaignName).resolve(CHARACTER_PATH);
         return mapper.readValue(
             characterFile(characterPath, characterName).toFile(),
             Character.class
+        );
+    }
+
+    public Path getCharacterFile(
+        long guildId,
+        String campaignName,
+        String characterName
+    ) {
+        return characterFile(
+            getCampaignDirectory(guildId, campaignName)
+                .resolve(CHARACTER_PATH),
+            characterName
         );
     }
 
