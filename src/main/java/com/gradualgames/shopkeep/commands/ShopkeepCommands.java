@@ -389,14 +389,14 @@ public class ShopkeepCommands extends ListenerAdapter {
                     );
 
                 if (!Files.isRegularFile(characterFile)) {
-                    event.reply("Character `" + characterName + "` does not exist.")
+                    event.reply("Character `" + exportCharacterName + "` does not exist.")
                         .setEphemeral(true)
                         .queue();
                     return;
                 }
 
                 event.replyFiles(FileUpload.fromData(characterFile))
-                    .setContent("Exported character: **" + characterName + "**")
+                    .setContent("Exported character: **" + exportCharacterName + "**")
                     .setEphemeral(true)
                     .queue();
                 return;
