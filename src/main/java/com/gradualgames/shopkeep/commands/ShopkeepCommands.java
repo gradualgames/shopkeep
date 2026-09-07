@@ -5,6 +5,7 @@ import com.gradualgames.shopkeep.character.FormatUtility;
 import com.gradualgames.shopkeep.character.Spell;
 import com.gradualgames.shopkeep.store.CharacterStore;
 import com.gradualgames.shopkeep.store.PlayerStore;
+import com.gradualgames.shopkeep.store.MapStore;
 import com.gradualgames.shopkeep.character.Weapon;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Random;
 
 public class ShopkeepCommands extends ListenerAdapter {
@@ -29,6 +31,8 @@ public class ShopkeepCommands extends ListenerAdapter {
     private CharacterStore characterStore;
 
     private PlayerStore playerStore;
+
+    private MapStore mapStore;
 
     private static final Random RANDOM = new Random();
 
@@ -41,12 +45,23 @@ public class ShopkeepCommands extends ListenerAdapter {
     public ShopkeepCommands(String dataDir) throws IOException {
         characterStore = new CharacterStore(dataDir);
         playerStore = new PlayerStore(dataDir);
+        mapStore = new MapStore(dataDir);
     }
 
     public void registerCommands(Guild guild) {
         guild.updateCommands()
             .addCommands(
                 Commands.slash("hello", "Tell Shopkeep to say hello"),
+
+                Commands.slash("uploadmap", "Upload an explored-area map for this campaign")
+                    .addOption(
+                        OptionType.ATTACHMENT,
+                        "file",
+                        "JPEG map image",
+                        true
+                    ),
+
+                Commands.slash("map", "Show explored-area maps for this campaign"),
 
                 Commands.slash("create", "Create a character")
                     .addOption(OptionType.STRING, "name", "name", true)
@@ -232,6 +247,90 @@ public class ShopkeepCommands extends ListenerAdapter {
             event.reply(morshuQuotes[RANDOM.nextInt(morshuQuotes.length)]).queue();
         }
         switch (event.getName()) {
+            case "uploadmap" -> {
+                var attachment = event.getOption("file").getAsAttachment();
+                String fileName = attachment.getFileName();
+                String lowerCaseFileName = fileName.toLowerCase();
+
+                if (!lowerCaseFileName.endsWith(".jpg") && !lowerCaseFileName.endsWith(".jpeg")) {
+                    event.reply("Upload failed: **" + fileName + "** is not a JPEG file.")
+                        .setEphemeral(true)
+                        .queue();
+                    return;
+                }
+
+                event.deferReply(true).queue();
+
+                attachment.getProxy().download()
+                    .thenAccept(inputStream -> {
+                        try (inputStream) {
+                            mapStore.save(guildId, campaignName, fileName, inputStream);
+                            log.info("Uploaded map '{}' in campaign '{}'.", fileName, campaignName);
+                            event.getHook()
+                                .editOriginal("Uploaded map: **" + fileName + "**")
+                                .queue();
+                        } catch (IOException e) {
+                            log.error("Could not save map '{}'.", fileName, e);
+                            event.getHook()
+                                .editOriginal("Upload failed: **" + fileName + "**")
+                                .queue();
+                        }
+                    })
+                    .exceptionally(e -> {
+                        log.error("Could not download map '{}'.", fileName, e);
+                        event.getHook()
+                            .editOriginal("Upload failed: **" + fileName + "**")
+                            .queue();
+                        return null;
+                    });
+
+                return;
+            }
+            case "map" -> {
+                final List<Path> maps;
+
+                try {
+                    maps = mapStore.loadAll(guildId, campaignName);
+                } catch (IOException e) {
+                    log.error("Could not load maps for campaign '{}'.", campaignName, e);
+                    event.reply("Could not load maps for this campaign.")
+                        .setEphemeral(true)
+                        .queue();
+                    return;
+                }
+
+                if (maps.isEmpty()) {
+                    event.reply("No explored-area maps have been uploaded for this campaign yet.")
+                        .setEphemeral(true)
+                        .queue();
+                    return;
+                }
+
+                event.deferReply(true).queue();
+
+                int batchSize = 10;
+                for (int start = 0; start < maps.size(); start += batchSize) {
+                    int end = Math.min(start + batchSize, maps.size());
+                    List<FileUpload> uploads = maps.subList(start, end).stream()
+                        .map(FileUpload::fromData)
+                        .toList();
+
+                    if (start == 0) {
+                        event.getHook()
+                            .editOriginal("**Explored-area maps:**")
+                            .setFiles(uploads)
+                            .queue();
+                    } else {
+                        event.getHook()
+                            .sendFiles(uploads)
+                            .setEphemeral(true)
+                            .queue();
+                    }
+                }
+
+                log.info("Displayed {} maps for campaign '{}'.", maps.size(), campaignName);
+                return;
+            }
             case "create" -> {
                 String name = event.getOption("name").getAsString();
                 String race = event.getOption("race").getAsString();
