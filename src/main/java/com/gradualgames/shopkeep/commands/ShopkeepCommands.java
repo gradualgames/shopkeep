@@ -150,7 +150,7 @@ public class ShopkeepCommands extends ListenerAdapter {
                         true
                     ),
 
-                Commands.slash("add-equipment", "Add equipment to character")
+                Commands.slash("add-equipment", "Add equipment or set its quantity")
                     .addOption(
                         OptionType.STRING,
                         "type",
@@ -721,10 +721,10 @@ public class ShopkeepCommands extends ListenerAdapter {
                 Character character = null;
                 try {
                     character = characterStore.load(guildId, campaignName, characterName);
-                    character.getEquipment().putIfAbsent(type, quantity);
+                    character.getEquipment().put(type, quantity);
                     characterStore.save(guildId, campaignName, character);
                     log.info(
-                        "Added equipment '{}' x{} to '{}'.",
+                        "Set equipment '{}' quantity to {} for '{}'.",
                         type,
                         quantity,
                         characterName

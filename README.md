@@ -137,6 +137,8 @@ export DATA_DIR=/data
 /unprepare-spells
 ```
 
+`/add-equipment` adds a new item or replaces an existing item's quantity with the supplied value. For example, `/add-equipment type:Torch quantity:3` sets the number of torches to 3.
+
 ## Philosophy
 
 Shopkeep is intentionally small.
